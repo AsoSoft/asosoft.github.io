@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurdish Grapheme-to-Phoneme Convertor</title>
+    <meta name="keywords" content="Kurdish, g2p, transliteration, Grapheme-to-Phoneme, hawar, IPA, کوردی" />
+    <meta name="description" content="Converting Central Kurdish text to the syllabified phoneme string" />
+    <meta name="twitter:title" content="Kurdish Grapheme-to-Phoneme Convertor" />
+    <meta name="twitter:description" content="" />
+    <meta property="og:title" content="Kurdish Grapheme-to-Phoneme Convertor" />
+    <meta property="og:description" content="" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" 
+        integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw==" 
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" 
+        integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ==" 
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="g2p.css" />
+</head>
+<body>
+<div class="ui orange inverted menu">
+    <div class="ui container">
+        <a class="item" href="/"> <i class="home icon"></i></a>
+        <a class="item" href="/g2p">G2P Convertor</a>
+    </div>
+</div>
+<div class="ui container">
+    <h1 class="ui center aligned header"><img class="ui right spaced image" src="AsoSoft.svg"> Kurdish Grapheme-to-Phoneme Convertor</h1>
+    <div class="ui form"><form spellcheck="false">
+        <div class="ui centered stackable grid">
+            <div class="row">
+                <div class="twelve wide column">
+                    <div class="inline field">
+                        <label>Input Central Kurdish text (Graphemes in Arabic Script):</label>
+                    </div>
+                    <div class="field">
+                        <textarea id="textIn"
+                                  style="direction: rtl;text-align: right; font-size:16px; line-height: 1.6;"
+                                  >بووین - درێژیی - درێژاییی - تویوور - وووهان
+گرتن - کوردستان -گرفت - دەکرد
+برنج - سەرنج - سەرنجێک - خستتە خوارەوە
+تۆ خەوت بینی. مامم خەوت.
+ئەمڕۆ و دوێنێ لەسەر کێشەی زەویوزار 25 کەسی تریش بریندار بوون.</textarea>
+                    </div>
+                    <div class="ui centered stackable grid">
+                        <div class="center aligned column">                                     
+                            <button class="ui button primary" type="button" id="btnConvert">Convert</button> 
+                            <button type="button" id="btnClear" class="ui compact icon button"><i class="trash icon"></i></button>           
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ui active centered inline loader"></div>
+                <div class="twelve wide column" id="results">
+                    <div class="ui orange secondary pointing tabular menu" style="justify-content: center;">
+                        <a class="item" data-tab="tab1">Syllabified phonemes</a>
+                        <a class="item" data-tab="tab2">IPA</a>
+                        <a class="active item" data-tab="tab3">Hawar</a>
+                    </div>
+                    <div class="ui bottom basic tab segment" data-tab="tab1">
+                        <div class="inline field">
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="chkMergeU" checked>
+                                <label>Merge conjunctive "و" with preceding word</label>
+                            </div>
+                            <div class="ui checkbox">
+                                <input type="checkbox" id="chkNumbers" checked>
+                                <label>Convert numbers to words</label>
+                            </div>
+                        </div>
+                        <div id="textOut1" contenteditable="true" class="resultDiv"></div>
+                    </div>
+                    <div class="ui bottom basic tab segment" data-tab="tab2">
+                        <div id="textOut2" contenteditable="true" class="resultDiv"></div>
+                    </div>
+                    <div class="ui bottom basic tab segment active" data-tab="tab3">
+                        <div id="textOut3" contenteditable="true" class="resultDiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+    <h4 class="ui horizontal header divider">Background Study:</h4>
+    <div class="ui equal width centered stackable grid">
+        <div class="ten wide column">
+            <h3>Automated Grapheme-to-Phoneme Conversion for Central Kurdish based on Optimality Theory</h3>
+            <div>
+                by:
+                <a href="https://aso-mehmudi.github.io">Aso Mahmudi</a> <a href="mailto:aso.mahmudi@ut.ac.ir"><i class="envelope icon"></i></a>
+                & Hadi Veisi <a href="mailto:h.veisi@ut.ac.ir"><i class="envelope icon"></i></a>
+            </div>
+            <div>Faculty of New Sciences and Technologies, University of Tehran, Iran</div>
+            <b>Abstract:</b>
+            <p>
+                The writing system of Central Kurdish features three cases in which there is no one-to-one mapping between the orthographical letters and the phonemes of the language.
+                Consequently, the written words including these cases may be pronounced in multiple ways.
+                The process of finding the correct pronunciation of written words is called Grapheme-to-Phoneme (G2P) conversion and is a key step in natural language processing tasks such as speech synthesis.
+                As Central Kurdish is a low-resourced language, we present a G2P conversion method based on the phonological rules of the language, rather than pronunciation dictionaries and data-driven learning methods.
+                After reviewing the phonology and alphabet of the language through the framework of Optimality Theory, we generate all possible pronunciations.
+                Then, by specifying and applying ranked constraints, we eliminate undesirable candidates so as to keep only one well-formed pronunciation per word.
+                The evaluation of our proposed method on two datasets resulted in 0.75% of overall Phoneme Error Rate (PER) and achieved 94.71% precision in the detection of the short vowel /i/ and 100% of accuracy in the conversion of the letters “ی” and “و”.
+                Analyzing these results suggests that there is no need for additional new letters in the current orthographic system of Central Kurdish.
+                This approach also enables us to have a ranked suggestion list for the manual checking of the few ambiguous situations.
+            </p>
+        </div>
+        
+        <div class="six wide column">
+            <h3>Conversion table:</h3>
+            <div class="ui accordion">
+                <div class="active title">
+                    <i class="dropdown icon"></i>
+                    Cases of uncertainty:
+                </div>
+                <div class="active content">
+                    <table class="ui unstackable celled striped compact collapsing table">
+                        <tr>
+                            <th>Grapheme</th>
+                            <th>Phoneme</th>
+                            <th>Hawar</th>
+                            <th>IPA</th>
+                        </tr>
+                        <tr>
+                            <td>و</td>
+                            <td>w<br />u<br />û</td>
+                            <td>w<br />u<br />û</td>
+                            <td>w<br />ʊ<br />u</td>
+                        </tr>
+                        <tr>
+                            <td>ی</td>
+                            <td>y<br />î</td>
+                            <td>y<br />î</td>
+                            <td>j<br />i</td>
+                        </tr>
+                        <tr><td>Not Written</td><td>i</td><td>i</td><td>ɪ</td></tr>
+                    </table>
+                </div>
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Certain conversions:
+                </div>
+                <div class="content">
+                    <table class="ui unstackable celled striped compact collapsing table">
+                        <tr>
+                            <th>Grapheme</th>
+                            <th>Phoneme</th>
+                            <th>Hawar</th>
+                            <th>IPA</th>
+                        </tr>
+                        <tr><td>ئ</td><td>ʔ</td><td></td><td>ʔ</td></tr>
+                        <tr><td>ا</td><td>a</td><td>a</td><td>ä</td></tr>
+                        <tr><td>ب</td><td>b</td><td>b</td><td>b</td></tr>
+                        <tr><td>پ</td><td>p</td><td>p</td><td>p</td></tr>
+                        <tr><td>ت</td><td>t</td><td>t</td><td>t</td></tr>
+                        <tr><td>ج</td><td>c</td><td>c</td><td>dʒ</td></tr>
+                        <tr><td>چ</td><td>ç</td><td>ç</td><td>tʃ</td></tr>
+                        <tr><td>ح</td><td>ḧ</td><td>ḧ</td><td>ħ</td></tr>
+                        <tr><td>خ</td><td>x</td><td>x</td><td>x</td></tr>
+                        <tr><td>د</td><td>d</td><td>d</td><td>d</td></tr>
+                        <tr><td>ر</td><td>r</td><td>r</td><td>ɾ</td></tr>
+                        <tr><td>ڕ</td><td>ř</td><td>rr</td><td>r</td></tr>
+                        <tr><td>ز</td><td>z</td><td>z</td><td>z</td></tr>
+                        <tr><td>ژ</td><td>j</td><td>j</td><td>ʒ</td></tr>
+                        <tr><td>س</td><td>s</td><td>s</td><td>s</td></tr>
+                        <tr><td>ش</td><td>ş</td><td>ş</td><td>ʃ</td></tr>
+                        <tr><td>ع</td><td>ƹ</td><td>'</td><td>ʕ</td></tr>
+                        <tr><td>غ</td><td>ẍ</td><td>ẍ</td><td>ɣ</td></tr>
+                        <tr><td>ف</td><td>f</td><td>f</td><td>f</td></tr>
+                        <tr><td>ڤ</td><td>v</td><td>v</td><td>v</td></tr>
+                        <tr><td>ق</td><td>q</td><td>q</td><td>q</td></tr>
+                        <tr><td>ک</td><td>k</td><td>k</td><td>k</td></tr>
+                        <tr><td>گ</td><td>g</td><td>g</td><td>g</td></tr>
+                        <tr><td>ل</td><td>l</td><td>l</td><td>l</td></tr>
+                        <tr><td>ڵ</td><td>ł</td><td>ll</td><td>ɫ</td></tr>
+                        <tr><td>م</td><td>m</td><td>m</td><td>m</td></tr>
+                        <tr><td>ن</td><td>n</td><td>n</td><td>n</td></tr>
+                        <tr><td>ۆ</td><td>o</td><td>o</td><td>o̞</td></tr>
+                        <tr><td>ھ</td><td>h</td><td>h</td><td>h</td></tr>
+                        <tr><td>ە</td><td>e</td><td>e</td><td>a</td></tr>
+                        <tr><td>ێ</td><td>ê</td><td>ê</td><td>ɛ</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {	
+        $('.tabular.menu .item').tab();
+        $('.tabular.menu .item').on('click', function(){$('.ambigContent').remove();});
+        $('.ui.checkbox').checkbox();
+        $('.ui.accordion').accordion();
+        $('.ui.dropdown').dropdown();
+        $('.loader').hide();
+        $('#results').hide();
+        $("#btnConvert").click(function () {
+            convert();
+        });
+    });
+    $("#btnClear").click(function () {
+        $("#textIn").val('');
+        $('#results').hide();
+        $('.ambigContent').remove();
+    });
+    function convert() {
+        $('#results').hide();
+        $('.ambigContent').remove();
+        if ($("#textIn").val().trim()) {
+            $('.loader').show('fast', 'swing');
+            
+            $.post("https://service.kurdinus.com/g2p/convert",
+                {
+                    text: $("#textIn").val().trim(),
+                    mergeU: $("#chkMergeU").prop("checked"),
+                    convertNumbers: $("#chkNumbers").prop("checked"),
+                    returnOneWord: false
+                },
+                function (data) {
+                    $('.loader').hide();
+                    $('#results').show('fast', 'swing');
+                    $("#textOut1").html(showPH(data['ph']));
+                    $("#textOut2").html(showPH(data['ipa']));
+                    $("#textOut3").html(showPH(data['hawar']));
+                    $('.ambig').each(function () {
+                        $(this).click(function () {
+                            suggest($(this))
+                        });
+                    });                    
+            });
+        }
+    }
+    const w = 'ˈ·ʔbptcçḧxdrřzjsşƹẍfvqkglłmnwuûohyaeêiîĝđüôõʒʃħɾʒʃʕɣɫʊo̞äɛɪŋ͡';
+    function showPH(text) {
+        text = '<p>' + text.replace(/\n/g, '</p><p>') + '</p>';
+        return text.replace(
+            new RegExp('(['+ w + ']+)¶([' + w + '¶]+)', 'g'),
+            '<span class=\"ambig\" data-n=\"$2\">$1</span>');
+    }
+    function suggest(grapheme){
+        candidates =grapheme.data("n").split('¶');
+        $('.curAmbig').removeClass('curAmbig');
+        $('.ambigContent').remove();
+        grapheme.addClass('curAmbig');
+        grapheme.append('<div class="ambigContent"><small>other candidates:</small></div>');
+        for (let i = 0; i < candidates.length; i++)
+                $('.ambigContent').append('<div class="candidate">' + candidates[i] + '</div>');
+
+        $('.candidate').each(function () {
+            $(this).click(function () {
+                correct(grapheme, $(this).text())
+            });
+        });
+    }
+    function correct(grapheme, candidate) {
+        $('.curAmbig').replaceWith(candidate);
+        $('.ambigContent').remove();
+    }
+</script>
+<div class="footer">
+    <div class="ui container">
+        <p>&copy; 2019-2020 <a href="https://asosoft.com/">AsoSoft</a></p>
+    </div>
+</div>
+</body>
+</html>
