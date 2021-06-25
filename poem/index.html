@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Poems Meter Classifier | AsoSoft</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../css/site.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
+	<link rel="stylesheet" href="poem.css" />
+	<link rel="shortcut icon" href="../favicon.ico">
+</head>
+
+<body dir="ltr">
+	<main>
+		<div class="navbar">
+			<div class="logo">
+				<a href="../"><img src="../css/AsoSoft.svg" height="25" alt="AsoSoft"> <span>AsoSoft</span></a>
+			</div>
+			<div class="navLinks">
+				<ul>
+					<li><a href="../">Products 〉</a></li>
+					<li><span class="selected">Poems Meter Classifier</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="contents">
+			<h1>Automatic Meter Classification of Kurdish Poems</h1>
+			<div class="nContainer">
+				<div class="nInput">
+					<label>Input Central Kurdish poem (find Kurdish poems in <a href="https://books.vejin.net/en/">books.vejin.net</a>):</label>
+					<textarea id="txtInput" placeholder="دەقێکی کوردی بخەرە ئێرە" spellcheck="false">گەرچی تووشی ڕەنجەڕۆیی و حەسرەت و دەردم ئەمن
+قەت لەدەس ئەم چەرخە سپڵە نابەزم مەردم ئەمن
+ئاشقی چاوی کەژاڵ و گەردنی پڕ خاڵ نیم
+ئاشقی کێو و تەلان و بەندەن و بەردم ئەمن
+گەر لە برسان و لەبەر بێ بەرگی ئیمڕۆ ڕەق ھەڵێم
+نۆکەریی بێگانە ناکەم تا لەسەر ھەردم ئەمن
+من لە زنجیر و تەناف و دار و بەند باکم نییە
+لەت لەتم کەن بمکوژن ھێشتا دەڵێم کوردم ئەمن</textarea>
+					<button class="button" id="btnClassify">Classify</button>
+					<button class="button" id="btnClear">clear</button>
+				</div>
+				<div class="loading"></div>
+				<div class="results">
+					<div class="classification">
+						<h3>Classification:</h3>
+						<p>Type of the Poem: <span class="label orange" id="poemType"></span></p>
+						<p>Meter of the Poem: <span class="label orange" id="poemMeter"></span></p>
+						<p>Nearest Quantitative Pattern: <span class="label" id="poemQuantitative"></span></p>
+						<p>Nearest Syllabic Pattern: <span class="label" id="poemSyllabic"></span></p>
+					</div>
+					<div class="detail">
+						<div class="menu">
+							<div class="item" id="mItem0">Poem</div>
+							<div class="item" id="mItem1">Syllabification</div>
+							<div class="item" id="mItem2">Scantion</div>
+							<div class="item" id="mItem3">Quantitive fit</div>
+						</div>
+						<div id="tab0" class="tab">
+							<table id="table0" class="">
+								<thead>
+									<tr>
+										<th>No</th>
+										<th>Lines</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+						<div id="tab1" class="tab">
+							<table id="table1" class="">
+								<thead>
+									<tr>
+										<th>No</th>
+										<th>Syllabified Lines</th>
+										<th>Syll. Count</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+						<div id="tab2" class="tab">
+							<table id="table2" class="">
+								<thead>
+									<tr>
+										<th>No</th>
+										<th>Scanned Lines</th>
+										<th>Distance</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+						<div id="tab3" class="tab">
+							<table id="table3" class="">
+								<thead>
+									<tr>
+										<th>No</th>
+										<th>Best Fitting pattern</th>
+										<th>Distance</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h2>Background Study:</h2>
+			<div>
+				<div class="title">
+					<a href="https://arxiv.org/abs/2102.12109">
+						<span class="icon pdf"></span>
+					</a>Automatic Meter Classification of Kurdish Poems
+				</div>
+				<div class="authors">
+					<ul>
+						<li><a href="https://scholar.google.com/citations?user=sHeSKFIAAAAJ">Aso Mahmudi</a></li>
+						<li><a href="https://scholar.google.com/citations?user=Jf6cd6UAAAAJ">Hadi Veisi</a></li>
+					</ul>
+				</div>
+			</div>
+			<h3>Cite:</h3>
+			<pre>
+@article{mahmudi2021automatic,
+    title={Automatic Meter Classification of Kurdish Poems},
+    author={Mahmudi, Aso and Veisi, Hadi},
+    journal={arXiv preprint arXiv:2102.12109},
+    year={2021}
+}
+</pre>
+			<div>
+				<p>Kurdish Poem Dataset:
+					<a class="tag" href="https://github.com/AsoSoft/Vejinbooks-Poem-Dataset">Github</a>
+					<a class="tag" href="https://doi.org/10.5281/zenodo.4079471"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4079471.svg" alt="DOI"></a>
+				</p>
+			</div>
+			<h3>Abstract:</h3>
+			<div class="abstract">
+				<div>
+					Most of the classic texts in Kurdish literature are poems. Knowing the meter of the poems is helpful for correct reading, a better understanding of the meaning, and avoidance of ambiguity. This paper presents a rule-based method for automatic classification
+					of the poem meter for the Central Kurdish language. The metrical system of Kurdish poetry is divided into three classes of quantitative, syllabic, and free verses. As the vowel length is not phonemic in the language, there are uncertainties in syllable
+					weight and meter identification. The proposed method generates all the possible situations and then, by considering all lines of the input poem and the common meter patterns of Kurdish poetry, identifies the most probable meter type and pattern of
+					the input poem. Evaluation of the method on a dataset from VejinBooks Kurdish corpus resulted in 97.3% of precision in meter type and 96.2% of precision in pattern identification.
+				</div>
+				<div>
+					<b>Keywords:</b> Computational Linguistics, Poetry classification, Central Kurdish
+				</div>
+			</div>
+		</div>
+		<footer>
+			<p>
+				<a href="https://twitter.com/asosoft"><img src="../css/twitter.svg" class="icon"></a>
+				<a href="https://facebook.com/asosoftku"><img src="../css/facebook.svg" class="icon"></a>
+				<a href="https://instagram.com/asosoftco"><img src="../css/instagram.svg" class="icon"></a>
+			</p>
+			<p>
+				&copy; 2021 <a href="http://asosoft.com">AsoSoft</a>
+			</p>
+		</footer>
+	</main>
+	<script>
+		$(document).ready(function() {
+			$('.loading').hide();
+			$('.results').hide();
+			$("#btnClassify").click(function() {
+				classify();
+			});
+			$('.tab').hide();
+		});
+		$("#btnClear").click(function() {
+			$("#txtInput").val('');
+			$('.results').hide();
+		});
+
+		function changeTab(n) {
+			$('.item').removeClass('active');
+			$('#mItem' + n).addClass('active');
+			$('.tab').hide();
+			$('#tab' + n).show();
+		}
+		$('#mItem0').click(function() {
+			changeTab(0)
+		});
+		$('#mItem1').click(function() {
+			changeTab(1)
+		});
+		$('#mItem2').click(function() {
+			changeTab(2)
+		});
+		$('#mItem3').click(function() {
+			changeTab(3)
+		});
+
+
+		function classify() {
+			$('.results').hide();
+			if ($("#txtInput").val().trim()) {
+				$('.loading').show('fast');
+				$.post("https://service.kurdinus.com/g2p/classifyPoem", {
+						text: $("#txtInput").val().trim()
+					},
+					function(data) {
+						$('.loading').hide();
+						$('.results').show('fast');
+						$("#poemType").html(data['poemType']);
+						$("#poemMeter").html(data['poemMeter']);
+						$("#poemQuantitative").html(`${data['quantitative']} (${data['quantitativeConf']}% Confidence)`);
+						$("#poemSyllabic").html(`${data['syllabic']} (${data['syllabicConf']}% Confidence)`);
+						$('#table0 > tbody:last-child').append(data['lines']);
+						$('#table1 > tbody:last-child').append(data['syllabified']);
+						$('#table2 > tbody:last-child').append(data['scanned']);
+						$('#table3 > tbody:last-child').append(data['nearestPattern']);
+						changeTab(1);
+					}
+				);
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+textarea {
+	padding: 10px;
+	line-height: 1.5em;
+	min-height: 200px;
+	height: 90%;
+	width: 90%;
+	direction: rtl;
+}
+
+.nInput {
+	text-align: center;
+}
+
+.results {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 800px) {
+	.results {
+		grid-template-columns: 1fr;
+	}
+}
+
+.classification {
+	justify-items: center;
+	align-items: center;
+}
+
+.detail {
+	justify-items: center;
+	align-items: center;
+}
+
+.label {
+	background-color: var(--ColorD);
+	padding: 2px;
+}
+
+.orange {
+	background-color: var(--ColorO) !important;
+	color: var(--ColorB);
+}
+
+.tab {
+	padding: 15px 5px;
+}
+
+.menu {
+	text-align: center;
+}
+
+.menu .item {
+	border-bottom: 2px solid var(--ColorG);
+	display: inline-block;
+	cursor: pointer;
+	margin: 0 5px;
+	padding: 5px;
+}
+
+.active {
+	font-weight: 700;
+	border-bottom: 2px solid var(--ColorO) !important;
+	color: var(--ColorO) !important;
+}
+
+th,
+td {
+	padding: 5px;
+	text-align: center;
+	border-left: 1px solid var(--ColorG);
+}
+
+tr {
+	border: 1px solid var(--ColorG);
+	padding: 4px;
+	background: #fff;
+}
+
+th,
+tr:nth-child(even) {
+	background-color: var(--ColorD);
+}
+
+table {
+	border: 1px solid var(--ColorG);
+	border-collapse: collapse;
+}
