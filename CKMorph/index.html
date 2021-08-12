@@ -156,7 +156,7 @@
 		}
 
 		function formatResults(s) {
-			s = s.replace(/⟨(.+?)⟩‹(اندن)›/g, ' ‪<span class="t lemma" title="lemma">$1$2</span><span class="t morpheme" title="morpheme">$1</span>');
+			s = s.replace(/⟨(.+?)⟩‹(اندن)›/g, ' ‪<span class="t lemma" title="lemma">$1$2</span> <span class="t morpheme" title="morpheme">$1</span>');
 			s = s.replace(/⟨(.+?)⟩/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/‹(.+?)›/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/«(.+?)»/g, ' ‪<span class="t morpheme" title="morpheme">$1</span>');
