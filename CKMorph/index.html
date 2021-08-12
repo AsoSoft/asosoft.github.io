@@ -45,7 +45,7 @@
 					<a href="">
 						<span class="icon pdf"></span>
 					</a>
-					Automated Grapheme-to-Phoneme Conversion for Central Kurdish based on Optimality Theory
+					CKMorph: the First Comprehensive Morphological Analyzer for Central Kurdish
 				</div>
 				<div class="authors">
 					<ul>
@@ -117,7 +117,7 @@
 			<span>Colors:</span>
 			<span class="t lemma">Lemma</span>
 			<span class="t pos">Part of Speech</span>
-			<span class="t morpheme">Morpheme</span>
+			<span class="t morpheme">Morpheme (abstract)</span>
 			<span class="t feature">Feature</span>
 			</div>`;
 
@@ -151,6 +151,7 @@
 		}
 
 		function formatResults(s) {
+			s = s.replace(/⟨(.+?)⟩‹(اندن)›/g, ' ‪<span class="t lemma" title="lemma">$1$2</span>');
 			s = s.replace(/⟨(.+?)⟩/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/‹(.+?)›/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/«(.+?)»/g, ' ‪<span class="t morpheme" title="morpheme">$1</span>');
