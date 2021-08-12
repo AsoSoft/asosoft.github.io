@@ -118,7 +118,12 @@
 			<span class="t lemma">Lemma</span>
 			<span class="t pos">Part of Speech</span>
 			<span class="t morpheme">Morpheme (abstract)</span>
-			<span class="t feature">Feature</span>
+			<span class="t feature">Feature</span>			
+			</div>
+			<div style="text-align:center;">
+			Note: We have used <a href="https://universaldependencies.org/">Universal Dependencies 2.0</a> annotations for
+			<a href="https://universaldependencies.org/u/pos/index.html">part of speech</a> and 
+			<a href="https://universaldependencies.org/u/feat/index.html">features</a>
 			</div>`;
 
 		function analyze() {
@@ -151,7 +156,7 @@
 		}
 
 		function formatResults(s) {
-			s = s.replace(/⟨(.+?)⟩‹(اندن)›/g, ' ‪<span class="t lemma" title="lemma">$1$2</span>');
+			s = s.replace(/⟨(.+?)⟩‹(اندن)›/g, ' ‪<span class="t lemma" title="lemma">$1$2</span><span class="t morpheme" title="morpheme">$1</span>');
 			s = s.replace(/⟨(.+?)⟩/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/‹(.+?)›/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/«(.+?)»/g, ' ‪<span class="t morpheme" title="morpheme">$1</span>');

@@ -213,9 +213,12 @@ a.section {
 
 .authors>ul {
 	list-style: none;
-	display: inline-flex;
 	margin-block: 0;
 	padding-inline: 0;
+}
+
+.authors li {
+	display: inline;
 }
 
 .authors>ul li:first-child::before {
