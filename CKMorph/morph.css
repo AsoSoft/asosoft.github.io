@@ -1,0 +1,71 @@
+textarea {
+	padding: 10px;
+	line-height: 1.5em;
+	min-height: 100px;
+	height: 90%;
+	width: 95%;
+	direction: rtl;
+}
+
+#results {
+	background-color: #fafafa;
+	padding: 10px;
+	margin-bottom: 50px;
+}
+
+.word {
+	font-weight: 700;
+}
+
+.analyses {
+	margin-top: 0;
+	line-height: 1.7;
+	list-style-type: circle;
+}
+
+.analyses li {
+	margin-bottom: 10px;
+}
+
+.notdetected {
+	padding-left: 40px;
+}
+
+.t {
+	margin: 0px 1px;
+	padding: 0 3px;
+}
+
+.lemma {
+	font-weight: 700;
+	color: #fff;
+	background-color: #6435c9;
+}
+
+.morpheme {
+	color: #fff;
+	background-color: #a333c8;
+}
+
+.pos {
+	color: #fff;
+	background-color: #2185d0;
+}
+
+.feature {
+	color: #fff;
+	font-size: small;
+	background-color: #00b5ad;
+	font-style: italic;
+}
+
+.nonstandard {
+	color: #fff;
+	font-style: italic;
+	background-color: #fbbd08;
+}
+
+.slang {
+	color: #fff;
+	background-color: #db2828;
+}

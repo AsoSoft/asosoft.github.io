@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>CKMorph: Central Kurdish Morphological Analyzer | AsoSoft</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../css/site.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
+	<link rel="stylesheet" href="morph.css" />
+	<link rel="shortcut icon" href="../favicon.ico">
+</head>
+
+<body dir="ltr">
+	<main>
+		<div class="navbar">
+			<div class="logo">
+				<a href="../"><img src="../css/AsoSoft.svg" height="25" alt="AsoSoft"> <span>AsoSoft</span></a>
+			</div>
+			<div class="navLinks">
+				<ul>
+					<li><a href="../">Products 〉</a></li>
+					<li><span class="selected">CKMorph</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="contents">
+			<h1>CKMorph: Central Kurdish Morphological Analyzer</h1>
+			<div class="nContainer">
+				<div class="nInput">
+					<label>Input Central Kurdish Words:</label>
+					<textarea id="txtInput" placeholder="دەقێکی کوردی بخەرە ئێرە" spellcheck="false"></textarea>
+					<button class="button" id="btnAnalyze">Analyze</button>
+					<button class="button" id="btnClear">clear</button>
+				</div>
+				<div class="loading"></div>
+				<div id="results">
+
+				</div>
+			</div>
+			<h2>Background Study:</h2>
+			<div>
+				<div class="title">
+					<a href="">
+						<span class="icon pdf"></span>
+					</a>
+					Automated Grapheme-to-Phoneme Conversion for Central Kurdish based on Optimality Theory
+				</div>
+				<div class="authors">
+					<ul>
+						<li><a href="">Morteza Naserzade</a></li>
+						<li><a href="https://scholar.google.com/citations?user=sHeSKFIAAAAJ">Aso Mahmudi</a></li>
+						<li><a href="https://scholar.google.com/citations?user=hqYZSDgAAAAJ">Hawre Hosseini</a></li>
+						<li><a href="https://scholar.google.com/citations?user=Jf6cd6UAAAAJ">Hadi Veisi</a></li>
+						<li><a href="https://scholar.google.com/citations?user=oOpc8P0AAAAJ">Mohammad MohammadAmini</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- <h3>Cite:</h3>
+			<pre>
+@article{naserzade2021,
+    title={CKMorph: the First Comprehensive Morphological Analyzer for Central Kurdish},
+    author={Naserzade, Morteza and Mahmudi, Aso and Hosseini, Hawre and Veisi, Hadi and MohammadAmini, Mohammad},
+    year={2021}
+}
+</pre> -->
+			<div>
+				<!-- <p>Kurdish Morphological analysis Dataset:
+					<a class="tag" href="https://github.com/AsoSoft/Kurdish-Morph-dataset">Github</a>
+					<a class="tag" href="https://zenodo.org/badge/latestdoi/172930780"><img src="https://zenodo.org/badge/172930780.svg" alt="DOI"></a>
+				</p> -->
+			</div>
+			<h3>Abstract:</h3>
+			<div class="abstract">
+				<div>
+					A morphological analyzer, a significant component of many NLP applications especially for morphologically rich languages, divides an input word into all its composing morphemes and identifies their morphological roles. In this paper, we introduce the
+					first extensive morphological analyzer for the Central Kurdish (CK). A low­resource language with rich morphology, Central Kurdish’s morphological analysis requires systematic and comprehensive collection and categorization of morphological and morphophonological
+					rules of the language. We endeavored to do so building upon the limited existing literature and implemented such rules in our analyzer leveraging finite­State transducers. We have also collected and manually labeled a generative lexicon containing
+					more than 400 verb lemmas and over 10,000 noun and adjective stems, named entities and other types of word stems. For testing purposes and in order to provide a benchmark for future research, we have collected, manually labeled, and publicly shared
+					a test set containing 1000 words and their morphological constituents. Our proposed analyzer is able to analyze CK words with 96.0 precision, 88.3 recall, and 92.0 F­measure.
+				</div>
+				<div>
+					<b>Keywords:</b> Morphological Analyzer, Central Kurdish, Computational Morphology, Finite-State Transducer, Two-­Level Morphology
+				</div>
+			</div>
+		</div>
+		<footer>
+			<p>
+				<a href="https://twitter.com/asosoft"><img src="../css/twitter.svg" class="icon"></a>
+				<a href="https://facebook.com/asosoftku"><img src="../css/facebook.svg" class="icon"></a>
+				<a href="https://instagram.com/asosoftco"><img src="../css/instagram.svg" class="icon"></a>
+			</p>
+			<p>
+				&copy; 2021 <a href="http://asosoft.com">AsoSoft</a>
+			</p>
+		</footer>
+	</main>
+	<script>
+		$(document).ready(function() {
+			$('.loading').hide();
+			$('#results').hide();
+			$("#txtInput").val('دەیهێنیت بۆ ئەم برا گەورەیەم؟ ' +
+				'هەرگیز ڕاشنەدەگیراینەوە. ' +
+				'لە دەنگە خۆشەکەشتانەوە دیارە. ئەگەر هەڵیشیاننەگرتبوویتایەتەوە');
+			$("#btnAnalyze").click(function() {
+				analyze();
+			});
+		});
+
+		$("#btnClear").click(function() {
+			$("#txtInput").val('');
+			$('#results').hide();
+		});
+
+		const detail = `<div style="text-align:center;">
+			<span>Colors:</span>
+			<span class="t lemma">Lemma</span>
+			<span class="t pos">Part of Speech</span>
+			<span class="t morpheme">Morpheme</span>
+			<span class="t feature">Feature</span>
+			</div>`;
+
+		function analyze() {
+			$('#results').hide();
+			if ($("#txtInput").val().trim()) {
+				$('.loading').show('fast');
+
+				$.post("https://service.kurdinus.com/analyze/morph", {
+						input: $("#txtInput").val().trim()
+					},
+					function(data) {
+						$('.loading').hide();
+						$("#results").html(detail + '<h3>Morphological Analyses:</h3>');
+						$('#results').show('fast');
+						$.each(data, function(key, value) {
+							$("#results").append('<div class="word">' + key + '</div>');
+							if (value.length > 0) {
+								let anlayses = '<ul class="analyses">';
+								for (let i = 0; i < value.length; i++) {
+									anlayses += '<li>' + formatResults(value[i]) + '</li>';
+								}
+								anlayses += '</ul>'
+								$("#results").append(anlayses);
+							} else {
+								$("#results").append('<div class="notdetected">Not detected!</div>');
+							}
+						});
+					});
+			}
+		}
+
+		function formatResults(s) {
+			s = s.replace(/⟨(.+?)⟩/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
+			s = s.replace(/‹(.+?)›/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
+			s = s.replace(/«(.+?)»/g, ' ‪<span class="t morpheme" title="morpheme">$1</span>');
+			s = s.replace(/{(NonStandard)}/g, '<span class="t nonstandard">$1</span>');
+			s = s.replace(/{(SLANG)}/g, '<span class="t slang">$1</span>');
+			s = s.replace(/{(.+?)}/g, '<span class="t feature">$1</span>');
+			s = s.replace(/\[([A-Z].+?)\]/g, '<span class="t pos" title="Part-of-Speech">$1</span>');
+			return s;
+		}
+	</script>
+</body>
+
+</html>
