@@ -42,29 +42,29 @@
 			<h2>Background Study:</h2>
 			<div>
 				<div class="title">
-					<a href="">
+					<a href="https://arxiv.org/pdf/2109.08615">
 						<span class="icon pdf"></span>
 					</a>
-					CKMorph: the First Comprehensive Morphological Analyzer for Central Kurdish
+					CKMorph: A Comprehensive Morphological Analyzer for Central Kurdish
 				</div>
 				<div class="authors">
 					<ul>
 						<li><a href="">Morteza Naserzade</a></li>
 						<li><a href="https://scholar.google.com/citations?user=sHeSKFIAAAAJ">Aso Mahmudi</a></li>
-						<li><a href="https://scholar.google.com/citations?user=hqYZSDgAAAAJ">Hawre Hosseini</a></li>
 						<li><a href="https://scholar.google.com/citations?user=Jf6cd6UAAAAJ">Hadi Veisi</a></li>
+						<li><a href="https://scholar.google.com/citations?user=hqYZSDgAAAAJ">Hawre Hosseini</a></li>
 						<li><a href="https://scholar.google.com/citations?user=oOpc8P0AAAAJ">Mohammad MohammadAmini</a></li>
 					</ul>
 				</div>
 			</div>
-			<!-- <h3>Cite:</h3>
+			<h3>Cite:</h3>
 			<pre>
-@article{naserzade2021,
-    title={CKMorph: the First Comprehensive Morphological Analyzer for Central Kurdish},
-    author={Naserzade, Morteza and Mahmudi, Aso and Hosseini, Hawre and Veisi, Hadi and MohammadAmini, Mohammad},
+@article{naserzade2021CKMorph,
+    title={CKMorph: A Comprehensive Morphological Analyzer for Central Kurdish},
+    author={Naserzade, Morteza and Mahmudi, Aso and Veisi, Hadi and Hosseini, Hawre and MohammadAmini, Mohammad},
     year={2021}
 }
-</pre> -->
+</pre>
 			<div>
 				<!-- <p>Kurdish Morphological analysis Dataset:
 					<a class="tag" href="https://github.com/AsoSoft/Kurdish-Morph-dataset">Github</a>
@@ -74,11 +74,13 @@
 			<h3>Abstract:</h3>
 			<div class="abstract">
 				<div>
-					A morphological analyzer, a significant component of many NLP applications especially for morphologically rich languages, divides an input word into all its composing morphemes and identifies their morphological roles. In this paper, we introduce the
-					first extensive morphological analyzer for the Central Kurdish (CK). A low­resource language with rich morphology, Central Kurdish’s morphological analysis requires systematic and comprehensive collection and categorization of morphological and morphophonological
-					rules of the language. We endeavored to do so building upon the limited existing literature and implemented such rules in our analyzer leveraging finite­State transducers. We have also collected and manually labeled a generative lexicon containing
-					more than 400 verb lemmas and over 10,000 noun and adjective stems, named entities and other types of word stems. For testing purposes and in order to provide a benchmark for future research, we have collected, manually labeled, and publicly shared
-					a test set containing 1000 words and their morphological constituents. Our proposed analyzer is able to analyze CK words with 96.0 precision, 88.3 recall, and 92.0 F­measure.
+					A morphological analyzer, which is a significant component of many natural language processing applications especially for morphologically rich languages, divides an input word into all its composing morphemes and identifies their morphological roles.
+					In this paper, we introduce a comprehensive morphological analyzer for Central Kurdish (CK), a low-resourced language with a rich morphology. Building upon the limited existing literature, we first assembled and systematically categorized a comprehensive
+					collection of the morphological and morphophonological rules of the language. Additionally, we collected and manually labeled a generative lexicon containing nearly 10,000 verb, noun and adjective stems, named entities, and other types of word stems.
+					We used these rule sets and resources to implement CKMorph Analyzer based on finite-state transducers. In order to provide a benchmark for future research, we collected, manually labeled, and publicly shared test sets for evaluating accuracy and
+					coverage of the analyzer. CKMorph was able to correctly analyze 95.9% of the accuracy test set, containing 1,000 CK words morphologically analyzed according to the context. Moreover, CKMorph gave at least one analysis for 95.5% of 4.22M CK tokens
+					of the coverage test set. The demonstration of the application and resources including CK verb database and test sets are openly accessible at
+					<a href="https://github.com/CKMorph">github.com/CKMorph</a>
 				</div>
 				<div>
 					<b>Keywords:</b> Morphological Analyzer, Central Kurdish, Computational Morphology, Finite-State Transducer, Two-­Level Morphology
