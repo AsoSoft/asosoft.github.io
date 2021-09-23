@@ -111,6 +111,42 @@ li .selected {
 	border-bottom: var(--ColorO) 2px solid;
 }
 
+.members {}
+
+.member {
+	display: grid;
+	min-height: 100px;
+	grid-template-columns: auto 1fr;
+	margin: 10px 10px;
+	padding: 10px;
+	border: 1px solid #eee;
+	border-radius: 5px;
+}
+
+.member-name {
+	font-size: 22px;
+	font-weight: 700;
+}
+
+.member-media>img {
+	width: 150px;
+	margin-inline-end: 10px;
+}
+
+.member-media {
+	text-align: center;
+}
+
+.member-content {}
+
+.member-position {}
+
+.member-desc>ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
 .sections {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -160,6 +196,9 @@ a.section {
 
 @media screen and (max-width: 600px) {
 	.sections {
+		grid-template-columns: 1fr;
+	}
+	.member {
 		grid-template-columns: 1fr;
 	}
 }
