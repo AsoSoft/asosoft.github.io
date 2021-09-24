@@ -60,6 +60,10 @@ pre {
 	margin: 0;
 }
 
+pre.cite {
+	font-size: 12px;
+}
+
 button:focus {
 	outline: none;
 }
