@@ -115,8 +115,6 @@ li .selected {
 	border-bottom: var(--ColorO) 2px solid;
 }
 
-.members {}
-
 .member {
 	display: grid;
 	min-height: 100px;
@@ -134,7 +132,8 @@ li .selected {
 
 .member-media>img {
 	width: 150px;
-	margin-inline-end: 10px;
+	margin-inline-end: 15px;
+	border-radius: 5px;
 }
 
 .member-media {
@@ -204,6 +203,9 @@ a.section {
 	}
 	.member {
 		grid-template-columns: 1fr;
+	}
+	.member-name {
+		text-align: center;
 	}
 }
 
