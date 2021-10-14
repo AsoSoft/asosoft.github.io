@@ -282,3 +282,20 @@ a.section {
 .tag>img {
 	vertical-align: middle;
 }
+
+.post {
+	padding: 10px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.post>p {
+	text-align: justify;
+	text-justify: inter-word;
+	text-indent: 20px;
+}
+
+.post>ul>li {
+	text-align: justify;
+	text-justify: inter-word;
+}
