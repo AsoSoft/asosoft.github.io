@@ -68,6 +68,12 @@ button:focus {
 	outline: none;
 }
 
+table, th, td{
+	border-collapse: collapse;	
+    border: 1px solid #eee;
+	padding: 0 5px;
+}
+
 main {
 	display: grid;
 	height: 100vh;

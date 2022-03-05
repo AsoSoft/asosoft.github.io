@@ -29,11 +29,41 @@
 			Kurdish language speech data and its related resources like tags are of most important language resources which are required for NLP research and applications such as automatic speech recognition, speaker recognition, etc. In this project, speech data
 			for Kurdish language (Central Kurdish) was designed and collected so that it could be used in automatic speech recognition, speaker recognition, phonology researches, dialect analysis, etc. So far, approximately 30 hours of speech has been recorded
 			and transcribed in order to produce this corpus.
+			<h3>Metadata</h3>
+			<p>
+				The information of the speakers is given in a table which contains: 
+			</p>			
+			<ul>
+				<li>Microphone type: <i>USB/Philips/Jack/Laptop</i></li>
+				<li>Noise level</li>
+				<li>Gender (this label can be used for gender identification tasks): <i>Femal/Male</i></li>
+				<li>Dialect/city (this label may be used for the phonetic analysis of the various dialects of Kurdish and also dialect identification task)</li>
+				<li>Age</li>
+				<li>Education</li>
+				<li>Length (total and average)</li>
+			</ul>
+			<h3>Files</h3>
+			<p>
+				In the dataset, for each recording three files are given:
+			</p>
+			<ul>
+				<li><b>.wav</b>: wave file recorded in 22.05 kHz, 16bit, mono</li>
+				<li><b>.wrd</b>: transcription in Kurdish alphabet</li>
+				<li><b>.phn</b>: phonetic transcription in ASCII format</li>
+			</ul>
+			<p>
+				The file name format is as bellow: <br/>
+				SpeakerID(<i>3digits</i>) + Gender + RecordingDevice(<i>Laptop/PC/Mobile</i>) + Mic + SentenceID(<i>3digits</i>)</code><br/>
+				For example <code>001MLU001</code>: <br/>
+				SpeakerID=001, Gender=Male, RecordingDevice=Laptop, Mic=USB, and SentenceID=001
+			</p>
 			<h3>Download</h3>
-			A sample of AsoSoft speech corpus could be downloaded via the <a href="https://github.com/AsoSoft/">AsoSoft's repository on GitHub</a>. A portion of AsoSoft Speech Corpus will be made accessible to researchers for research, non-commercial use. Please
-			contact us via "h.veisi[at]ut.ac.ir" to access it.
+			<p>
+				A subset of AsoSoft speech corpus for research and non-commercial use could be downloaded via the <a href="https://github.com/AsoSoft/AsoSoft-Speech-Corpus">AsoSoft's repository on GitHub</a>
+				This dataset is a subset of the AsoSoft Speech Corpus that can be used for spoken language processing tasks in Central Kurdish such as speech recognition, speaker recognition, gender identification, and phonetic analysis. This subset includes 45 speakers, each of them has uttered 72 (same) sentences; the first 70 sentences of the AsoSoft Speech Corpus (i.e., sentence 1 to sentence 70) and the last two sentences (i.e., sentence 699 and sentence 700). Each of the last two sentences covers all Central Kurdish phonemes. The original version of the dataset contains 700 sentences for each speaker. The sentences are manually designed to represent the phonetic characteristics of the Central Kurdish. The recording date of this dataset is during the year 2016. 
+			</p>
 			<h3>Cite</h3>
-			If you are using our text corpus cite us.
+			If you are using this corpus, please cite the following reference:
 			<pre class="cite">@article{veisi2021jira,
     title={Jira: a Kurdish Speech Recognition System Designing and Building Speech Corpus and Pronunciation Lexicon},
     author={Veisi, Hadi and Hosseini, Hawre and Mohammadamini, Mohammad and Fathy, Wirya and Mahmudi, Aso},
