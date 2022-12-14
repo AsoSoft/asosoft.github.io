@@ -59,6 +59,12 @@ textarea {
 	font-style: italic;
 }
 
+.etym {
+	color: #fff;
+	background-color: #b56000;
+	font-style: italic;
+}
+
 .nonstandard {
 	color: #fff;
 	font-style: italic;

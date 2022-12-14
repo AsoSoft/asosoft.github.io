@@ -131,7 +131,7 @@
 		$(document).ready(function() {
 			$('.loading').hide();
 			$('#results').hide();
-			$("#btnConvert").click(function() {
+			$('#btnConvert').click(function() {
 				convert();
 			});
 		});
@@ -151,8 +151,8 @@
 		$('#mItem3').click(function() {
 			changeTab(3)
 		});
-		$("#btnClear").click(function() {
-			$("#txtInput").val('');
+		$('#btnClear').click(function() {
+			$('#txtInput').val('');
 			$('#results').hide();
 			$('.ambigContent').remove();
 		});
@@ -160,21 +160,21 @@
 		function convert() {
 			$('#results').hide();
 			$('.ambigContent').remove();
-			if ($("#txtInput").val().trim()) {
+			if ($('#txtInput').val().trim()) {
 				$('.loading').show('fast');
 
-				$.post("https://service.kurdinus.com/g2p/convert", {
-						text: $("#txtInput").val().trim(),
-						mergeU: $("#chkMergeU").prop("checked"),
-						convertNumbers: $("#chkNumbers").prop("checked"),
+				$.post('https://service.kurdinus.com/g2p/convert', {
+						text: $('#txtInput').val().trim(),
+						mergeU: $('#chkMergeU').prop('checked'),
+						convertNumbers: $('#chkNumbers').prop('checked'),
 						returnOneWord: false
 					},
 					function(data) {
 						$('.loading').hide();
 						$('#results').show('fast');
-						$("#textOut1").html(showPH(data['ph']));
-						$("#textOut2").html(showPH(data['ipa']));
-						$("#textOut3").html(showPH(data['hawar']));
+						$('#textOut1').html(showPH(data['ph']));
+						$('#textOut2').html(showPH(data['ipa']));
+						$('#textOut3').html(showPH(data['hawar']));
 						$('.ambig').each(function() {
 							$(this).click(function() {
 								suggest($(this))
@@ -194,7 +194,7 @@
 		}
 
 		function suggest(grapheme) {
-			candidates = grapheme.data("n").split('¶');
+			candidates = grapheme.data('n').split('¶');
 			$('.curAmbig').removeClass('curAmbig');
 			$('.ambigContent').remove();
 			grapheme.addClass('curAmbig');

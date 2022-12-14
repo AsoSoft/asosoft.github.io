@@ -59,28 +59,23 @@
 			</div>
 			<h3>Cite:</h3>
 			<pre>
-@article{naserzade2021CKMorph,
+@article{naserzade2023CKMorph,
     title={CKMorph: A Comprehensive Morphological Analyzer for Central Kurdish},
     author={Naserzade, Morteza and Mahmudi, Aso and Veisi, Hadi and Hosseini, Hawre and MohammadAmini, Mohammad},
-    year={2021}
+    journal={International Journal of Digital Humanities},
+    year={2023},
+    publisher={Springer}
 }
 </pre>
-			<div>
-				<!-- <p>Kurdish Morphological analysis Dataset:
-					<a class="tag" href="https://github.com/AsoSoft/Kurdish-Morph-dataset">Github</a>
-					<a class="tag" href="https://zenodo.org/badge/latestdoi/172930780"><img src="https://zenodo.org/badge/172930780.svg" alt="DOI"></a>
-				</p> -->
-			</div>
+			<h3>Kurdish Morphological analysis Dataset:</h3>
+			<ul>
+				<li><a class="tag" href="https://zenodo.org/badge/latestdoi/409043053">The Central Kurdish verb database: <img src="https://zenodo.org/badge/409043053.svg" alt="DOI"></a></li>
+				<li><a class="tag" href="https://zenodo.org/badge/latestdoi/403498029">The evaluation data sets: <img src="https://zenodo.org/badge/403498029.svg" alt="DOI"></a></li>
+			</ul>
 			<h3>Abstract:</h3>
 			<div class="abstract">
 				<div>
-					A morphological analyzer, which is a significant component of many natural language processing applications especially for morphologically rich languages, divides an input word into all its composing morphemes and identifies their morphological roles.
-					In this paper, we introduce a comprehensive morphological analyzer for Central Kurdish (CK), a low-resourced language with a rich morphology. Building upon the limited existing literature, we first assembled and systematically categorized a comprehensive
-					collection of the morphological and morphophonological rules of the language. Additionally, we collected and manually labeled a generative lexicon containing nearly 10,000 verb, noun and adjective stems, named entities, and other types of word stems.
-					We used these rule sets and resources to implement CKMorph Analyzer based on finite-state transducers. In order to provide a benchmark for future research, we collected, manually labeled, and publicly shared test sets for evaluating accuracy and
-					coverage of the analyzer. CKMorph was able to correctly analyze 95.9% of the accuracy test set, containing 1,000 CK words morphologically analyzed according to the context. Moreover, CKMorph gave at least one analysis for 95.5% of 4.22M CK tokens
-					of the coverage test set. The demonstration of the application and resources including CK verb database and test sets are openly accessible at
-					<a href="https://github.com/CKMorph">github.com/CKMorph</a>
+A morphological analyzer, a significant component of many natural language processing applications, especially for morphologically rich languages, divides an input word into all its composing morphemes and identifies their morphological roles. This paper introduces a comprehensive morphological analyzer for Central Kurdish (CK), also known as Sorani, a low-resourced language with rich morphology. Building upon the limited existing literature, we first assembled and systematically categorized an extensive collection of the morphological and morphophonological rules of the language. Additionally, we collected and manually labeled a generative lexicon containing nearly 10,000 verb, noun and adjective stems, named entities, and other types of word stems. We used these rule sets and resources to implement CKMorph Analyzer based on finite-state transducers. In order to provide a benchmark for future research, we collected, manually labeled, and publicly shared test sets for evaluating the accuracy and coverage of the analyzer. CKMorph was able to correctly analyze 95.9% of the first test set, containing 1,000 CK words morphologically analyzed according to the context. Moreover, CKMorph gave at least one analysis for 95.5% of 4.22M CK tokens of the second test set. The demonstration of the application and resources, including CK verb database and test sets, are openly accessible at <a href="https://github.com/CKMorph">github.com/CKMorph</a>
 				</div>
 				<div>
 					<b>Keywords:</b> Morphological Analyzer, Central Kurdish, Computational Morphology, Finite-State Transducer, Two-­Level Morphology
@@ -120,7 +115,8 @@
 			<span class="t lemma">Lemma</span>
 			<span class="t pos">Part of Speech</span>
 			<span class="t morpheme">Morpheme (abstract)</span>
-			<span class="t feature">Feature</span>			
+			<span class="t feature">Feature</span>
+			<span class="t etym">Etymology</span>
 			</div>
 			<div style="text-align:center;">
 			Note: We have used <a href="https://universaldependencies.org/">Universal Dependencies 2.0</a> annotations for
@@ -132,14 +128,13 @@
 			$('#results').hide();
 			if ($("#txtInput").val().trim()) {
 				$('.loading').show('fast');
-
 				$.post("https://service.kurdinus.com/analyze/morph", {
 						input: $("#txtInput").val().trim()
 					},
 					function(data) {
 						$('.loading').hide();
 						$("#results").html(detail + '<h3>Morphological Analyses:</h3>');
-						$('#results').show('fast');
+						$('#results').show();
 						$.each(data, function(key, value) {
 							$("#results").append('<div class="word">' + key + '</div>');
 							if (value.length > 0) {
@@ -162,8 +157,9 @@
 			s = s.replace(/⟨(.+?)⟩/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/‹(.+?)›/g, ' ‪<span class="t lemma" title="lemma">$1</span>');
 			s = s.replace(/«(.+?)»/g, ' ‪<span class="t morpheme" title="morpheme">$1</span>');
-			s = s.replace(/{(NonStandard)}/g, '<span class="t nonstandard">$1</span>');
+			s = s.replace(/{(NST)}/g, '<span class="t nonstandard">NonStandard</span>');
 			s = s.replace(/{(SLANG)}/g, '<span class="t slang">$1</span>');
+			s = s.replace(/{Etym=(.+?)}/g, '<span class="t etym">$1</span>');
 			s = s.replace(/{(.+?)}/g, '<span class="t feature">$1</span>');
 			s = s.replace(/\[([A-Z].+?)\]/g, '<span class="t pos" title="Part-of-Speech">$1</span>');
 			return s;

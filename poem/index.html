@@ -139,10 +139,10 @@
 			<h3>Abstract:</h3>
 			<div class="abstract">
 				<div>
-					Most of the classic texts in Kurdish literature are poems. Knowing the meter of the poems is helpful for correct reading, a better understanding of the meaning, and avoidance of ambiguity. This paper presents a rule-based method for automatic classification
-					of the poem meter for the Central Kurdish language. The metrical system of Kurdish poetry is divided into three classes of quantitative, syllabic, and free verses. As the vowel length is not phonemic in the language, there are uncertainties in syllable
-					weight and meter identification. The proposed method generates all the possible situations and then, by considering all lines of the input poem and the common meter patterns of Kurdish poetry, identifies the most probable meter type and pattern of
-					the input poem. Evaluation of the method on a dataset from VejinBooks Kurdish corpus resulted in 97.3% of precision in meter type and 96.2% of precision in pattern identification.
+Most of the classic texts in Kurdish literature are poems. Knowing the meter of the poems is helpful for correct reading, a better understanding of the meaning, and avoidance of ambiguity. This paper presents a rule-based method for automatic classification
+of the poem meter for the Central Kurdish language. The metrical system of Kurdish poetry is divided into three classes of quantitative, syllabic, and free verses. As the vowel length is not phonemic in the language, there are uncertainties in syllable
+weight and meter identification. The proposed method generates all the possible situations and then, by considering all lines of the input poem and the common meter patterns of Kurdish poetry, identifies the most probable meter type and pattern of
+the input poem. Evaluation of the method on a dataset from VejinBooks Kurdish corpus resulted in 97.3% of precision in meter type and 96.2% of precision in pattern identification.
 				</div>
 				<div>
 					<b>Keywords:</b> Computational Linguistics, Poetry classification, Central Kurdish
@@ -164,13 +164,13 @@
 		$(document).ready(function() {
 			$('.loading').hide();
 			$('.results').hide();
-			$("#btnClassify").click(function() {
+			$('#btnClassify').click(function() {
 				classify();
 			});
 			$('.tab').hide();
 		});
-		$("#btnClear").click(function() {
-			$("#txtInput").val('');
+		$('#btnClear').click(function() {
+			$('#txtInput').val('');
 			$('.results').hide();
 		});
 
@@ -196,22 +196,22 @@
 
 		function classify() {
 			$('.results').hide();
-			if ($("#txtInput").val().trim()) {
+			if ($('#txtInput').val().trim()) {
 				$('.loading').show('fast');
-				$.post("https://service.kurdinus.com/g2p/classifyPoem", {
-						text: $("#txtInput").val().trim()
+				$.post('https://service.kurdinus.com/g2p/classifyPoem', {
+						text: $('#txtInput').val().trim()
 					},
 					function(data) {
+						$('#poemType').html(data['poemType']);
+						$('#poemMeter').html(data['poemMeter']);
+						$('#poemQuantitative').html(`${data['quantitative']} (${data['quantitativeConf']}% Confidence)`);
+						$('#poemSyllabic').html(`${data['syllabic']} (${data['syllabicConf']}% Confidence)`);
+						$('#table0 > tbody:last-child').html(data['lines']);
+						$('#table1 > tbody:last-child').html(data['syllabified']);
+						$('#table2 > tbody:last-child').html(data['scanned']);
+						$('#table3 > tbody:last-child').html(data['nearestPattern']);
 						$('.loading').hide();
 						$('.results').show('fast');
-						$("#poemType").html(data['poemType']);
-						$("#poemMeter").html(data['poemMeter']);
-						$("#poemQuantitative").html(`${data['quantitative']} (${data['quantitativeConf']}% Confidence)`);
-						$("#poemSyllabic").html(`${data['syllabic']} (${data['syllabicConf']}% Confidence)`);
-						$('#table0 > tbody:last-child').append(data['lines']);
-						$('#table1 > tbody:last-child').append(data['syllabified']);
-						$('#table2 > tbody:last-child').append(data['scanned']);
-						$('#table3 > tbody:last-child').append(data['nearestPattern']);
 						changeTab(1);
 					}
 				);
