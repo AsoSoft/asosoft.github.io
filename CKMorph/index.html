@@ -31,13 +31,12 @@
 				<div class="nInput">
 					<label>Input Central Kurdish Words:</label>
 					<textarea id="txtInput" placeholder="دەقێکی کوردی بخەرە ئێرە" spellcheck="false"></textarea>
-					<button class="button" id="btnAnalyze">Analyze</button>
+					<button class="button" id="btnAnalyze">Analyze <small>(Universal Dep.)</small></button>
+					<button class="button" id="btnAnalyzeUniMorph">Analyze <small>(UniMorph)</small></button>
 					<button class="button" id="btnClear">clear</button>
 				</div>
 				<div class="loading"></div>
-				<div id="results">
-
-				</div>
+				<div id="results"></div>
 			</div>
 			<h2>Background Study:</h2>
 			<div>
@@ -97,16 +96,19 @@ A morphological analyzer, a significant component of many natural language proce
 		$(document).ready(function() {
 			$('.loading').hide();
 			$('#results').hide();
-			$("#txtInput").val('دەیهێنیت بۆ ئەم برا گەورەیەم؟ ' +
+			$('#txtInput').val('دەیهێنیت بۆ ئەم برا گەورەیەم؟ ' +
 				'هەرگیز ڕاشنەدەگیراینەوە. ' +
 				'لە دەنگە خۆشەکەشتانەوە دیارە. ئەگەر هەڵیشیاننەگرتبوویتایەتەوە');
-			$("#btnAnalyze").click(function() {
+			$('#btnAnalyze').click(function() {
 				analyze();
+			});
+			$('#btnAnalyzeUniMorph').click(function() {
+				analyzeUniMorph();
 			});
 		});
 
-		$("#btnClear").click(function() {
-			$("#txtInput").val('');
+		$('#btnClear').click(function() {
+			$('#txtInput').val('');
 			$('#results').hide();
 		});
 
@@ -126,26 +128,26 @@ A morphological analyzer, a significant component of many natural language proce
 
 		function analyze() {
 			$('#results').hide();
-			if ($("#txtInput").val().trim()) {
+			if ($('#txtInput').val().trim()) {
 				$('.loading').show('fast');
-				$.post("https://service.kurdinus.com/analyze/morph", {
-						input: $("#txtInput").val().trim()
+				$.post('https://service.kurdinus.com/analyze/morph', {
+						input: $('#txtInput').val().trim()
 					},
 					function(data) {
 						$('.loading').hide();
-						$("#results").html(detail + '<h3>Morphological Analyses:</h3>');
+						$('#results').html(detail + '<h3>Morphological Analyses:</h3>');
 						$('#results').show();
 						$.each(data, function(key, value) {
-							$("#results").append('<div class="word">' + key + '</div>');
+							$('#results').append('<div class="word">' + key + '</div>');
 							if (value.length > 0) {
 								let anlayses = '<ul class="analyses">';
 								for (let i = 0; i < value.length; i++) {
 									anlayses += '<li>' + formatResults(value[i]) + '</li>';
 								}
 								anlayses += '</ul>'
-								$("#results").append(anlayses);
+								$('#results').append(anlayses);
 							} else {
-								$("#results").append('<div class="notdetected">Not detected!</div>');
+								$('#results').append('<div class="notdetected">Not detected!</div>');
 							}
 						});
 					});
@@ -163,6 +165,31 @@ A morphological analyzer, a significant component of many natural language proce
 			s = s.replace(/{(.+?)}/g, '<span class="t feature">$1</span>');
 			s = s.replace(/\[([A-Z].+?)\]/g, '<span class="t pos" title="Part-of-Speech">$1</span>');
 			return s;
+		}
+		
+		function analyzeUniMorph() {
+			$('#results').hide();
+			if ($('#txtInput').val().trim()) {
+				$('.loading').show('fast');
+				$.post('https://service.kurdinus.com/analyze/unimorph', {
+						input: $('#txtInput').val().trim()
+					},
+					function(data) {
+						$('#results').html('<h3>Not Detected:</h3><ul class="notdetected"></ul><h3>Detected:</h3><table id="unimorph"><tr><th>Lemma</th><th>Form</th><th>Analysis</th></tr></table>');
+						let notDetected = [];
+						$.each(data, function(key, value) {
+							if (value.length > 0) {
+								for (let i = 0; i < value.length; i++) {
+									$('#unimorph').append('<tr><td>' + (value[i]).replace(/\t/g, '</td><td>') + '</td></tr>');
+								}
+							} else {
+								$('.notdetected').append('<li>'+key+'</li>');
+							}
+						});
+						$('.loading').hide();
+						$('#results').show();
+					});
+			}
 		}
 	</script>
 </body>
