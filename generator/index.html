@@ -95,7 +95,7 @@
 								<option value="3">3rd singular (/-e/)</option>
 								<option value="4">1st plural (/-în/)</option>
 								<option value="5">2nd plural (/-in/)</option>
-								<option value="6">3rd plural (/-in/)</option>
+								<option value="5">3rd plural (/-in/)</option>
 							</select>
 						</div>
 						<div id="optArg">
@@ -293,6 +293,7 @@
 						w = w.replace(/ė$/i, 'e');
 						break;
 					case '-ĕ': // copula 
+						w = w.replace(/-[îy]-ĕ$/i, '-ye-tî');
 						w = w.replace(/([aeêiîouû])-ĕ$/i, '$1-ye');
 						w = w.replace(/ĕ$/i, 'e');
 						break;
@@ -308,11 +309,13 @@
 					case '-î': // î
 					case '-ît': // copula ît 
 					case '-în': // copula în 
+						w = w.replace(/-î-î(t|n)$/i, '-y-î$1');
 						w = w.replace(/([aeêiîouû])-î/i, '$1-y');
 						break;
 					case '-im': // im
 					case '-it': // it
 					case '-in': // copula in
+						w = w.replace(/-î-i(m|n)$/i, '-y-i$1');
 						w = w.replace(/([aeêiîouû])-i/i, '$1-');
 						break;
 					case '-êk': // Indefinite
