@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Kurdish Word Generator | AsoSoft</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../css/site.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
+	<link rel="stylesheet" href="generator.css" />
+	<link rel="shortcut icon" href="../favicon.ico">
+</head>
+
+<body dir="ltr">
+	<main>
+		<div class="navbar">
+			<div class="logo">
+				<a href="../"><img src="../css/AsoSoft.svg" height="25" alt="AsoSoft"> <span>AsoSoft</span></a>
+			</div>
+			<div class="navLinks">
+				<ul>
+					<li><a href="../applications.html">Applications 〉</a></li>
+					<li><span class="selected">Morphological Generator</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="contents">
+			<h1>Kurdish Word Generator</h1>
+			<div class="nContainer">
+				<div class="menu">
+					<div class="item" id="mItem1">Nouns</div>
+					<div class="item" id="mItem2">Verbs</div>
+				</div>
+				<div id="tab1" class="tab cols">
+					<div class="stem">
+						<div>
+							<label><b>Stem:</b></label>
+							<input type="stem" id="inputStem" name="inputStem" spellcheck="false" placeholder="type a word" value="dar">
+						</div>
+						<div id="result"></div>
+						<div id="resultAr"></div>
+						<div>
+							<button class="button" id="btnGenerateAll">Generate All</button>
+						</div>
+					</div>
+					<div class="options">
+						<div><b>Features and Clitics:</b></div>
+						<div id="optNum">
+							<label>Number: </label>
+							<select name="number" id="number">
+								<option value="0" selected>singular</option>
+								<option value="1">plural (/-an/)</option>
+							</select>
+						</div>
+						<div id="optDef">
+							<label>Definition: </label>
+							<select name="definition" id="definition">
+								<option value="0" selected>-</option>
+								<option value="1">definite (/-eke/)</option>
+								<option value="2">indefinite (/-êk/)</option>
+								<option value="3">demonstrative (/ew ...-e/)</option>
+							</select>
+						</div>
+						<div id="optIsh">
+							<input type="checkbox" id="ish" name="ish" value="0">
+							<label for="ish">Adverbial /-îş/</label>
+						</div>
+						<div id="optPoss">
+							<label>Possesive: </label>
+							<select name="possesive" id="possesive">
+								<option value="0" selected>-</option>
+								<option value="1">1st singular (/-im/)</option>
+								<option value="2">2nd singular (/-it/)</option>
+								<option value="3">3rd singular (/-î/)</option>
+								<option value="4">1st plural (/-man/)</option>
+								<option value="5">2nd plural (/-tan/)</option>
+								<option value="6">3rd plural (/-yan/)</option>
+							</select>
+						</div>
+						<div id="optPrep">
+							<label>Discontinuous preposition: </label>
+							<select name="preposition" id="preposition">
+								<option value="0" selected>-</option>
+								<option value="1">/-da/</option>
+								<option value="2">/-ewe/</option>
+							</select>
+						</div>
+						<div id="optCop">
+							<label>Copula: </label>
+							<select name="copula" id="copula">
+								<option value="0" selected>-</option>
+								<option value="1">1st singular (/-im/)</option>
+								<option value="2">2nd singular (/-ît/)</option>
+								<option value="3">3rd singular (/-e/)</option>
+								<option value="4">1st plural (/-în/)</option>
+								<option value="5">2nd plural (/-in/)</option>
+								<option value="6">3rd plural (/-in/)</option>
+							</select>
+						</div>
+						<div id="optArg">
+							<label>Argument: </label>
+							<select name="argument" id="argument">
+								<option value="0" selected>-</option>
+								<option value="1">1st singular (/-im/)</option>
+								<option value="2">2nd singular (/-it/)</option>
+								<option value="3">3rd singular (/-î/)</option>
+								<option value="4">1st plural (/-man/)</option>
+								<option value="5">2nd plural (/-tan/)</option>
+								<option value="6">3rd plural (/-yan/)</option>
+							</select>
+						</div>
+						<div id="optIzafe">
+							<input type="checkbox" id="izafe" name="izafe" value="0">
+							<label for="izafe">/-î/ izafe <small>(e.g., kar-î baş)</small></label>
+						</div>
+						<div id="optIzafeE">
+							<input type="checkbox" id="izafeE" name="izafeE" value="0">
+							<label for="izafeE">/-e/ izafe <small>(e.g., kar-e baş-eke)</small></label>
+						</div>
+					</div>
+				</div>
+				<div id="tab2" class="tab">
+					<div style="text-align: center;">Coming soon!</div>
+
+				</div>
+				<button class="button" id="btnClear">Clear</button>
+				<div id="resultsAll"></div>
+			</div>
+		</div>
+		<footer>
+			<p>
+				<a href="https://twitter.com/asosoft"><img src="../css/twitter.svg" class="icon"></a>
+				<a href="https://facebook.com/asosoftku"><img src="../css/facebook.svg" class="icon"></a>
+				<a href="https://instagram.com/asosoftco"><img src="../css/instagram.svg" class="icon"></a>
+			</p>
+			<p>
+				&copy; 2023 <a href="http://asosoft.com">AsoSoft</a>
+			</p>
+		</footer>
+	</main>
+	<script src="../js/L2A.js"></script>
+	<script>
+		$('#izafeE').on('change', () => generate());
+		$('#ish').on('change', () => generate());
+		$('#izafe').on('change', () => generate());
+		$('#argument').on('change', () => generate());
+		$('#preposition').on('change', () => generate());
+		$('#copula').on('change', () => generate());
+		$('#possesive').on('change', () => generate());
+		$('#number').on('change', () => generate());
+		$('#definition').on('change', () => generate());
+
+		function updateItems() {
+			$('#optIzafeE').show();
+			$('#optIzafe').show();
+			$('#optCop').show();
+			$('#optPrep').show();
+			$('#optArg').show();
+			$('#optIsh').show();
+			$('#optPoss').show();
+			$('#optDef').show();
+			$('#optNum').show();
+
+			if ($('#ish').is(':checked')) {
+				$('#optIzafe').hide();
+				$('#optIzafeE').hide();
+			}
+
+			if ($('#izafe').is(':checked')) {
+				$('#optPoss').hide();
+				$('#optArg').hide();
+				$('#optCop').hide();
+				$('#optIsh').hide();
+				$('#optPrep').hide();
+				$('#optIzafeE').hide();
+			}
+
+			if ($('#izafeE').is(':checked')) {
+				$('#optDef').hide();
+				$('#optNum').hide();
+				$('#optPoss').hide();
+				$('#optArg').hide();
+				$('#optCop').hide();
+				$('#optIsh').hide();
+				$('#optPrep').hide();
+				$('#optIzafe').hide();
+			}
+			if ($('#preposition').val() != '0') {
+				$('#optIzafeE').hide();
+				$('#optIzafe').hide();
+				$('#optArg').hide();
+			}
+
+			if ($('#copula').val() != '0') {
+				$('#optIzafeE').hide();
+				$('#optIzafe').hide();
+				$('#optArg').hide();
+			}
+			if ($('#definition').val() != '0') {
+				$('#optIzafeE').hide();
+			}
+
+			if ($('#number').val() != '0') {
+				$('#optIzafeE').hide();
+			}
+
+			if ($('#possesive').val() != '0') {
+				$('#optIzafeE').hide();
+				$('#optIzafe').hide();
+			}
+
+			if ($('#argument').val() != '0') {
+				$('#optCop').hide();
+				$('#optIzafeE').hide();
+				$('#optIzafe').hide();
+				$('#optPrep').hide();
+			}
+		}
+		let arrDef = ['', '-eke', '-êk', '-ė', '-an', '-ekan', '-anêk', '-ane'];
+		let arrCop = ['', '-im', '-ît', '-ĕ', '-în', '-in'];
+		let arrArgPoss = ['', '-im', '-it', '-î', '-man', '-tan', '-yan'];
+		let arrIsh = ['', '-îş'];
+		let arrPrep = ['', '-da', '-ewe'];
+		let arrIzafe = ['', '-î'];
+		let arrIzafeE = ['', '-ę'];
+
+		$('#btnGenerate').click(function () {
+			generate();
+		});
+
+		$('#inputStem').on('input', () => generate());
+		
+		function generate() {
+			updateItems();
+			let w = $('#inputStem').val();
+			if(w){
+				if ($('#izafeE').is(":visible") && $('#izafeE').is(':checked'))
+					w = MP(w, arrIzafeE[1]);
+
+				if ($('#definition').is(":visible")) {
+					var d = parseInt($('#definition').find(":selected").val());
+					if ($('#number').find(":selected").val() == '1')
+						d = d + 4;
+					w = MP(w, arrDef[d]);
+				}
+				if ($('#izafe').is(":visible") && $('#izafe').is(':checked'))
+					w = MP(w, arrIzafe[1]);
+
+				if ($('#ish').is(":visible") && $('#ish').is(':checked'))
+					w = MP(w, arrIsh[1]);
+
+				if ($('#possesive').is(":visible"))
+					w = MP(w, arrArgPoss[$('#possesive').find(":selected").val()]);
+
+				if ($('#preposition').is(":visible"))
+					w = MP(w, arrPrep[$('#preposition').find(":selected").val()]);
+
+
+				if ($('#argument').is(":visible"))
+					w = MP(w, arrArgPoss[$('#argument').find(":selected").val()]);
+
+				if ($('#copula').is(":visible"))
+					w = MP(w, arrCop[$('#copula').find(":selected").val()]);
+
+				$('#result').html(w);
+				$('#resultAr').html(transilterateLa2Ar(w.replace(/-/g,'')));
+			}else{
+				$('#result').html('');
+				$('#resultAr').html('');
+
+			}
+		}
+
+		function MP(x, y) {
+			w = x + y;
+			if (x.search(/[aeêiîouû]$/i)) {
+				switch (y) {
+					case '-ewe': // ewe
+						w = w.replace(/(û|u)-ewe$/i, 'uw-ewe');
+						w = w.replace(/([aeêo])-ewe$/i, '$1-we');
+						w = w.replace(/([iî])-ewe$/i, '$1-yewe');
+						break;
+					case '-ę': // Izafe
+						w = w.replace(/([aeêo])-ę$/i, '$1-ø');
+						w = w.replace(/î-ę$/i, 'î-ye');
+						w = w.replace(/[uû]-ę$/i, 'uw-e');
+						w = w.replace(/ę$/i, 'e');
+						break;
+					case '-ė': // Demonstrative
+						w = w.replace(/([aeêiîo])-ė$/i, '$1-ye');
+						w = w.replace(/[uû]-ė$/i, 'uw-e');
+						w = w.replace(/ė$/i, 'e');
+						break;
+					case '-ĕ': // copula 
+						w = w.replace(/([aeêiîouû])-ĕ$/i, '$1-ye');
+						w = w.replace(/ĕ$/i, 'e');
+						break;
+					case '-eke': // Definite
+					case '-ekan':
+						w = w.replace(/(û|u)-e(ke|kan)$/i, 'uw-e$2');
+						w = w.replace(/(i|î|wê)-e(ke|kan)$/i, '$1-ye$2');
+						w = w.replace(/([aeêo])-e(ke|kan)$/i, '$1-$2');
+						break;
+					case '-îş': // îş
+						w = w.replace(/([aeêiîouû])-î/i, '$1-');
+						break;
+					case '-î': // î
+					case '-ît': // copula ît 
+					case '-în': // copula în 
+						w = w.replace(/([aeêiîouû])-î/i, '$1-y');
+						break;
+					case '-im': // im
+					case '-it': // it
+					case '-in': // copula in
+						w = w.replace(/([aeêiîouû])-i/i, '$1-');
+						break;
+					case '-êk': // Indefinite
+						w = w.replace(/([aeêiîouû])-êk$/i, '$1-yek');
+						break;
+					case '-an': // plural
+					case '-ane':
+					case '-anêk':
+						w = w.replace(/(û|u)-a(n|ne|nêk)$/i, 'uw-a$2');
+						w = w.replace(/([aêiîo])-a(n|ne|nêk)$/i, '$1-ya$2');
+						w = w.replace(/(e)-a(n|ne|nêk)$/i, '-a$2');
+						break;
+					default:
+						break;
+				}
+			}
+			return w;
+		}
+		function combine(words, morphemes) {
+			let pairs = [];
+			words.forEach(x => { morphemes.forEach(y => { pairs.push(MP(x, y)) }) });
+			return pairs;
+		}
+		$('#btnGenerateAll').click(function () { if ($('#inputStem').val()) generateAllNoun() });
+		function generateAllNoun() {
+			let w = [$('#inputStem').val()];
+			let Words = new Set(w);
+			w1 = combine(w, arrDef);
+			w2 = combine(w1, arrIsh);
+			w3 = combine(w2, arrArgPoss); // possesive: kar-eke-man baş-e
+			w4 = combine(w3, arrPrep); //Discontinuous preposition:  le  kar-da
+			w5 = combine(w4, arrCop); // copula: le  kar-în
+			w6 = combine(w3, arrArgPoss); // argument: min kar-im kird
+			w7 = combine(w1, arrIzafe); // Izafe: kar-î baş
+			w8 = combine(w, arrIzafeE); // Izafe: kar-e baş-eke
+			w5.push(...w6);
+			w5.push(...w7);
+			w8.push(...w5);
+			w8.forEach(x => Words.add(x));
+			$('#resultsAll').html('<div>Count: ' + Words.size + ' words</div>');
+			Words.forEach(x => $('#resultsAll').append( transilterateLa2Ar(x.replace(/-/g, '')) + ' '));
+			$('#resultsAll').show();
+			$('#btnClear').show();
+		}
+
+		$('#btnClear').click(function () {
+			$('#resultsAll').html('');
+			$('#btnClear').hide();
+		});
+		$(document).ready(function () {
+			$('#btnClear').hide();
+			changeTab(1);
+			generate();
+		});
+		function changeTab(n) {
+			$('.item').removeClass('active');
+			$('#mItem' + n).addClass('active');
+			$('.tab').hide();
+			$('#tab' + n).show();
+		}
+		$('#mItem1').click(function () {
+			changeTab(1)
+		});
+		$('#mItem2').click(function () {
+			changeTab(2)
+		});
+	</script>
+</body>
+
+</html>

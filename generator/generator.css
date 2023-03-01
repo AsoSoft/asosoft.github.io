@@ -1,0 +1,96 @@
+.label {
+	background-color: var(--ColorD);
+	padding: 2px;
+}
+
+
+table {
+	border: 1px solid var(--ColorG);
+	border-collapse: collapse;
+}
+
+th,
+td {
+	padding: 5px;
+	text-align: center;
+	border-left: 1px solid var(--ColorG);
+}
+
+tr {
+	border: 1px solid var(--ColorG);
+	padding: 4px;
+	background: #fff;
+}
+
+th,
+tr:nth-child(even) {
+	background-color: var(--ColorD);
+}
+.options div{
+	padding: 5px;
+}
+label{
+	margin-inline-end: 10px;
+}
+#result{
+	font-weight: bold;
+	font-size: 18px;
+	text-align: center;
+	padding-top: 30px;
+}
+#resultAr{
+	font-weight: bold;
+	font-size: 18px;
+	text-align: center;
+	padding: 20px 0;
+}
+#resultsAll{
+	direction: rtl;
+	text-align: center;
+}
+.tab {
+	padding: 15px 5px;
+}
+
+.menu {
+	text-align: center;
+}
+
+.menu .item {
+	border-bottom: 2px solid var(--ColorG);
+	display: inline-block;
+	cursor: pointer;
+	margin: 0 5px;
+	padding: 5px;
+}
+.active {
+	font-weight: 700;
+	border-bottom: 2px solid var(--ColorO) !important;
+	color: var(--ColorO) !important;
+}
+.ku{
+	font-style: italic;
+	color: #9319da;
+}
+
+.cols{
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-gap: 16px;
+	grid-auto-flow: dense;
+}
+.stem{
+	grid-column:2;
+	text-align: center;
+}
+.options{
+}
+
+@media (max-width: 600px) {
+	.cols {
+		grid-template-columns: auto;
+	}
+	.stem{
+		grid-column: unset;
+	}
+}
