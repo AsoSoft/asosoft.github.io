@@ -124,8 +124,8 @@
 					<div style="text-align: center;">Coming soon!</div>
 
 				</div>
-				<button class="button" id="btnClear">Clear</button>
 				<div id="resultsAll">
+					<button class="button" id="btnClear">Clear</button>
 					<div id="resultsCount"></div>
 					<table id="resultsUnimorph"></table>
 				</div>
@@ -384,7 +384,7 @@
 				}
 			});
 
-			$('#resultsCount').html('Count: ' + results.length + ' words');
+			$('#resultsCount').html('Count: <b>' + results.length + '</b> Words');
 			$('#resultsUnimorph').html('<tr><th>Lemma</th><th>Form</th><th>Analysis</th></tr>');
 			results.forEach(x => $('#resultsUnimorph').append(`<tr><td>${transilterateLa2Ar($('#inputStem').val())}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
 			$('#resultsAll').show();
