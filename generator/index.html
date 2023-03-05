@@ -125,7 +125,10 @@
 
 				</div>
 				<button class="button" id="btnClear">Clear</button>
-				<div id="resultsAll"></div>
+				<div id="resultsAll">
+					<div id="resultsCount"></div>
+					<table id="resultsUnimorph"></table>
+				</div>
 			</div>
 		</div>
 		<footer>
@@ -218,12 +221,20 @@
 			}
 		}
 		let arrDef = ['', '-eke', '-êk', '-ė', '-an', '-ekan', '-anêk', '-ane'];
-		let arrCop = ['', '-im', '-ît', '-ĕ', '-în', '-in'];
+		let arrDefU = ['', 'DEF', 'INDF', '[DEM]', 'PL', 'DEF;PL', 'PL;INDF', 'PL;[DEM]'];
+		let arrCop = ['', '-im', '-ît', '-ĕ', '-în', '-in', '-in'];
+		let arrCopU = ['', '[COP1S]', '[COP2S]', '[COP3S]', '[COP1P]', '[COP2P]', '[COP3P]'];
 		let arrArgPoss = ['', '-im', '-it', '-î', '-man', '-tan', '-yan'];
+		let arrPossU = ['', 'PSS1S', 'PSS2S', 'PSS3S', 'PSS1P', 'PSS2P', 'PSS3P'];
+		let arrArgU = ['', '[ARG1S]', '[ARG2S]', '[ARG3S]', '[ARG1P]', '[ARG2P]', '[ARG3P]'];
 		let arrIsh = ['', '-îş'];
+		let arrIshU = ['', '[ÎŞ]'];
 		let arrPrep = ['', '-da', '-ewe'];
+		let arrPrepU = ['', '[DA]', '[EWE]'];
 		let arrIzafe = ['', '-î'];
+		let arrIzafeU = ['', '[IZAFE]'];
 		let arrIzafeE = ['', '-ę'];
+		let arrIzafeEU = ['', '[IZAFE]'];
 
 		$('#btnGenerate').click(function () {
 			generate();
@@ -282,7 +293,7 @@
 						w = w.replace(/([iî])-ewe$/i, '$1-yewe');
 						break;
 					case '-ę': // Izafe
-						w = w.replace(/([aeêo])-ę$/i, '$1-ø');
+						w = w.replace(/([aeêo])-ę$/i, '$1'); //-ø
 						w = w.replace(/î-ę$/i, 'î-ye');
 						w = w.replace(/[uû]-ę$/i, 'uw-e');
 						w = w.replace(/ę$/i, 'e');
@@ -309,7 +320,7 @@
 					case '-î': // î
 					case '-ît': // copula ît 
 					case '-în': // copula în 
-						w = w.replace(/-î-î(t|n)$/i, '-y-î$1');
+						w = w.replace(/-î-(î|ît|în)$/i, '-y-$1');
 						w = w.replace(/([aeêiîouû])-î/i, '$1-y');
 						break;
 					case '-im': // im
@@ -339,30 +350,50 @@
 			words.forEach(x => { morphemes.forEach(y => { pairs.push(MP(x, y)) }) });
 			return pairs;
 		}
+		function combineUniMorph(objects, morphemeArr, UniArr){			
+			let pairs = [];
+			objects.forEach(x => {
+				for(let i=0; i<morphemeArr.length; i++){					
+					let obj = {};
+					obj['form'] = MP(x.form, morphemeArr[i]);
+					obj['uni'] =  x.uni + (UniArr[i] ? (';' + UniArr[i]) : '');
+					pairs.push(obj);
+				}
+			});
+			return pairs;
+		}
 		$('#btnGenerateAll').click(function () { if ($('#inputStem').val()) generateAllNoun() });
 		function generateAllNoun() {
-			let w = [$('#inputStem').val()];
-			let Words = new Set(w);
-			w1 = combine(w, arrDef);
-			w2 = combine(w1, arrIsh);
-			w3 = combine(w2, arrArgPoss); // possesive: kar-eke-man baş-e
-			w4 = combine(w3, arrPrep); //Discontinuous preposition:  le  kar-da
-			w5 = combine(w4, arrCop); // copula: le  kar-în
-			w6 = combine(w3, arrArgPoss); // argument: min kar-im kird
-			w7 = combine(w1, arrIzafe); // Izafe: kar-î baş
-			w8 = combine(w, arrIzafeE); // Izafe: kar-e baş-eke
-			w5.push(...w6);
-			w5.push(...w7);
-			w8.push(...w5);
-			w8.forEach(x => Words.add(x));
-			$('#resultsAll').html('<div>Count: ' + Words.size + ' words</div>');
-			Words.forEach(x => $('#resultsAll').append( transilterateLa2Ar(x.replace(/-/g, '')) + ' '));
+			let ww = [{'form':$('#inputStem').val() ,  'uni': 'N'}]
+			ww1 = combineUniMorph(ww, arrDef, arrDefU);
+			ww2 = combineUniMorph(ww1, arrIsh, arrIshU);
+			ww3 = combineUniMorph(ww2, arrArgPoss, arrPossU); // possesive: kar-eke-man baş-e
+			ww4 = combineUniMorph(ww3, arrPrep, arrPrepU); // Discontinuous preposition:  le  kar-da
+			ww5 = combineUniMorph(ww4, arrCop, arrCopU); // copula: le  kar-în
+			ww6 = combineUniMorph(ww3, arrArgPoss, arrArgU); // argument: min kar-im kird
+			ww7 = combineUniMorph(ww1, arrIzafe, arrIzafeU); // Izafe: kar-î baş
+			ww8 = combineUniMorph(ww, arrIzafeE, arrIzafeEU); // Izafe: kar-e baş-eke
+			ww5.push(...ww6);
+			ww5.push(...ww7);
+			ww8.push(...ww5);
+
+			var results = [];
+			ww8.forEach(obj => {
+				if (!results.some(item => item.uni === obj.uni)) {
+					results.push(obj);
+				}
+			});
+
+			$('#resultsCount').html('Count: ' + results.length + ' words');
+			$('#resultsUnimorph').html('<tr><th>Lemma</th><th>Form</th><th>Analysis</th></tr>');
+			results.forEach(x => $('#resultsUnimorph').append(`<tr><td>${transilterateLa2Ar($('#inputStem').val())}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
 			$('#resultsAll').show();
 			$('#btnClear').show();
 		}
 
 		$('#btnClear').click(function () {
-			$('#resultsAll').html('');
+			$('#resultsUnimorph').html('');
+			$('#resultsAll').hide('');
 			$('#btnClear').hide();
 		});
 		$(document).ready(function () {
