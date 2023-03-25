@@ -56,12 +56,14 @@ label{
 	text-align: center;
 }
 
-.menu .item {
+.menu a.item , .menu .item {
 	border-bottom: 2px solid var(--ColorG);
 	display: inline-block;
 	cursor: pointer;
 	margin: 0 5px;
 	padding: 5px;
+	font-size: 20px;
+	color: var(--ColorO);
 }
 .active {
 	font-weight: 700;
@@ -82,8 +84,6 @@ label{
 .stem{
 	grid-column:2;
 	text-align: center;
-}
-.options{
 }
 
 @media (max-width: 600px) {

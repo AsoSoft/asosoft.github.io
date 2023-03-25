@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Kurdish Word Generator | AsoSoft</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="../css/site.css" />
+	<link rel="stylesheet" href="../css/icons.css" />
+	<link rel="stylesheet" href="generator.css" />
+	<link rel="shortcut icon" href="../favicon.ico">
+</head>
+
+<body dir="ltr">
+	<main>
+		<div class="navbar">
+			<div class="logo">
+				<a href="../"><img src="../css/AsoSoft.svg" height="25" alt="AsoSoft"> <span>AsoSoft</span></a>
+			</div>
+			<div class="navLinks">
+				<ul>
+					<li><a href="../applications.html">Applications 〉</a></li>
+					<li><span class="selected">Morphological Generator</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="contents">
+			<h1>Kurdish Word Generator</h1>
+			<div class="nContainer">
+				<div class="menu">
+					<a class="item" href="index.html">Nouns</a>
+					<div class="item active">Verbs</div>
+				</div>
+				<div class="tab">
+					<div class="options">
+						<div id="optTransitive">
+							<label>Transitivity: </label>
+							<select name="transitivity" id="transitivity">
+								<option value="0" selected>intransitive</option>
+								<option value="1" >transitive</option>
+							</select>
+						</div>
+						<div>
+							<label>Past Stem:</label>
+							<input type="text" id="pastStem" name="pastStem" spellcheck="false" value="kewt">
+						</div>
+						<div>
+							<label>Present Stem:</label>
+							<input type="text" id="presentStem" name="presentStem" spellcheck="false" value="kew">
+						</div>
+						<div>
+							<button class="button" id="btnGenerateAll">Generate All</button>
+						</div>
+					</div>
+				</div>
+				<div id="resultsAll">
+					<button class="button" id="btnClear">Clear</button>
+					<div id="results"></div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<p>
+				<a href="https://twitter.com/asosoft"><img src="../css/twitter.svg" class="icon"></a>
+				<a href="https://facebook.com/asosoftku"><img src="../css/facebook.svg" class="icon"></a>
+				<a href="https://instagram.com/asosoftco"><img src="../css/instagram.svg" class="icon"></a>
+			</p>
+			<p>
+				&copy; 2023 <a href="http://asosoft.com">AsoSoft</a>
+			</p>
+		</footer>
+	</main>
+	<script src="../js/L2A.js"></script>
+	<script>
+		const pPresent = [
+			{ 'm': '-im', 'u': '1S' },
+			{ 'm': '-ît', 'u': '2S' },
+			{ 'm': '-êt', 'u': '3S' },
+			{ 'm': '-în', 'u': '1P' },
+			{ 'm': '-in', 'u': '2P' },
+			{ 'm': '-in', 'u': '3P' }
+		];
+		const pPast = [
+			{ 'm': '-im', 'u': '1S' },
+			{ 'm': '-ît', 'u': '2S' },
+			{ 'm': '', 'u': '3S' }, //ø
+			{ 'm': '-în', 'u': '1P' },
+			{ 'm': '-in', 'u': '2P' },
+			{ 'm': '-in', 'u': '3P' }
+		];
+		const pPrsntPerfect = [
+			{ 'm': '-im', 'u': '1S' },
+			{ 'm': '-ît', 'u': '2S' },
+			{ 'm': '-e', 'u': '3S' },
+			{ 'm': '-în', 'u': '1P' },
+			{ 'm': '-in', 'u': '2P' },
+			{ 'm': '-in', 'u': '3P' }
+		];
+		const pImperative = [
+			{ 'm': '-ȅ', 'u': '2S' },
+			{ 'm': '-in', 'u': '2P' }
+		];
+		const pPronomial = [
+			{ 'm': '', 'u': '' },
+			{ 'm': '-im', 'u': '1S' },
+			{ 'm': '-it', 'u': '2S' },
+			{ 'm': '-î', 'u': '3S' },
+			{ 'm': '-man', 'u': '1P' },
+			{ 'm': '-tan', 'u': '2P' },
+			{ 'm': '-yan', 'u': '3P' }
+		];
+		const ish = [
+			{ 'm': '', 'u': '' },
+			{ 'm': '-îş', 'u': ';[ÎŞ]' }
+		];
+
+		let transitivity = 0;
+		$('#btnGenerateAll').click(function () { if ($('#pastStem').val()) generateAllVI() });
+		function generateAllVI() {
+			transitivity = $('#transitivity').find(":selected").val();
+			const StemPast = $('#pastStem').val().toLowerCase();
+			const StemPresent = $('#presentStem').val().toLowerCase();
+			// derivation: masder, past participle, agent,
+			const masdar = MP(StemPast, '-in');
+			const PP = MP(StemPast, '-û');
+			let derivation = [{ 'form': masdar, 'uni': 'V.MSDR' }];
+			derivation.push({ 'form': MP(masdar, '-ewe'), 'uni': 'V.MSDR;[EWE]' });
+			derivation.push({ 'form': 'ne-' + masdar, 'uni': 'V.MSDR;NEG' });
+			derivation.push({ 'form': 'ne-' + MP(masdar, '-ewe'), 'uni': 'V.MSDR;NEG;[EWE]' });
+			derivation.push({ 'form': PP, 'uni': 'V.PTCP' });
+			derivation.push({ 'form': 'ne-' + PP, 'uni': 'V.PTCP;NEG' });
+
+			// inflection (@ = is, # = argument)
+			let inflection = []
+			// from present stem
+			let alignment = (transitivity == '1') ? 'presentTransitive' : 'presentIntransitive';
+			inflection.push(...Conjugate('de@-' + StemPresent + '#', 'V;PRS;IND;', pPresent, alignment));
+			inflection.push(...Conjugate('na@-' + StemPresent + '#', 'V;PRS;IND;NEG;', pPresent, alignment));
+			inflection.push(...Conjugate('bi@-' + StemPresent + '#', 'V;PRS;SBJV;', pPresent, alignment));
+			inflection.push(...Conjugate('ne@-' + StemPresent + '#', 'V;PRS;SBJV;NEG;', pPresent, alignment));
+			inflection.push(...Conjugate('bi@-' + StemPresent + '#', 'V;IMP;', pImperative, alignment));
+			inflection.push(...Conjugate('me@-' + StemPresent + '#', 'V;IMP;NEG;', pImperative, alignment));
+
+			// from past stem
+			alignment = (transitivity == '1') ? 'pastTransitive' : 'pastIntransitive';
+			inflection.push(...Conjugate(StemPast + '@#', 'V;PST;IND;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-' + StemPast + '#', 'V;PST;IND;NEG;', pPast, alignment));
+			if (transitivity == 0) {
+				inflection.push(...Conjugate(MP(StemPast, '-ib') + '@#', 'V;PST;SBJV;', pPresent, alignment));
+				inflection.push(...Conjugate('ne@-' + MP(StemPast, '-ib') + '#', 'V;PST;SBJV;NEG;', pPresent, alignment));
+			}
+			inflection.push(...Conjugate('de@-' + StemPast + '#', 'V;PST;IPFV;IND;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-de-' + StemPast + '#', 'V;PST;IPFV;IND;NEG;', pPast, alignment));
+			inflection.push(...Conjugate('bi@-' + StemPast + '#' + '-aye', 'V;PST;IPFV;SBJV;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-' + StemPast + '#' + '-aye', 'V;PST;IPFV;SBJV;NEG;', pPast, alignment));
+			inflection.push(...Conjugate(PP + '@#', 'V;PRS;PRF;IND;', pPrsntPerfect, alignment));
+			inflection.push(...Conjugate('ne@-' + PP + '#', 'V;PRS;PRF;IND;NEG;', pPrsntPerfect, alignment));
+			inflection.push(...Conjugate(MP(StemPast, '-ibêt') + '@#', 'V;PRS;PRF;SBJV;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-' + MP(StemPast, '-ibêt') + '#', 'V;PRS;PRF;SBJV;', pPast, alignment));
+			inflection.push(...Conjugate(MP(StemPast, '-ibû') + '@#', 'V;PST;PRF;IND;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-' + MP(StemPast, '-ibû') + '#', 'V;PST;PRF;IND;', pPast, alignment));
+			inflection.push(...Conjugate(MP(StemPast, '-ibû') + '@#' + '-aye', 'V;PST;PRF;SBJV;', pPast, alignment));
+			inflection.push(...Conjugate('ne@-' + MP(StemPast, '-ibû') + '#' + '-aye', 'V;PST;PRF;SBJV;', pPast, alignment));
+
+			// postverbs /-ewe/ and /-e/
+			let postverbs = [];
+			inflection.forEach(x => { postverbs.push(...AppendPostVerb(x.form, x.uni)) });
+			inflection.push(...postverbs);
+			
+			var results = [];
+			inflection.forEach(x => {
+				if (!results.some(item => item.uni === x.uni)) {
+					results.push(x);
+				}
+			});
+			const lemma = transilterateLa2Ar(masdar.replace(/-/g, ''));
+			$('#results').html('Derivations: <b>' + derivation.length + '</b> forms');
+			$('#results').append('<table id="derivations"><tr><th>Lemma</th><th>Form(Latin)</th><th>Form</th><th>Analysis (UniMorph)</th></tr></table>');
+			derivation.forEach(x => $('#derivations').append(`<tr><td>${lemma}</td><td>${(x.form)}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
+			$('#results').append('<br/>Inflections: <b>' + results.length + '</b> forms');
+			$('#results').append('<table id="inflection"><tr><th>Lemma</th><th>Form(Latin)</th><th>Form</th><th>Analysis (UniMorph)</th></tr></table>');
+			results.forEach(x => $('#inflection').append(`<tr><td>${lemma}</td><td>${(x.form)}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
+			$('#resultsAll').show();
+			$('#btnClear').show();
+		}
+
+		function Conjugate(form, uni, pSet, alignment) {
+			// two sets of pronouns occur with verbs: Arguments and Pronominals
+			// due to the special form of ergtivity in Central Kurdish:
+			// in transitive, pronomials are: O in present tenses and S in past tenses
+			// Arguments in intransitives: S (ArgNO)
+			// Arguments in present transitives: A (ArgNO)
+			// Pronominals in present transitives: O (ArgAC)
+			// Arguments in past transitives: O (ArgAB) 
+			// Pronominals in past transitives: A (ArgER)
+			const alignArg = (alignment == 'pastTransitive') ? 'ArgAB' : 'ArgNO';
+			const alignPron = (alignment == 'pastTransitive') ? 'ArgER' : 'ArgAC';
+
+			let paradigms = [];
+			// conjugate argument with 6 person/numbers
+			for (let i = 0; i < pSet.length; i++) {
+				let temp = {};
+				temp['form'] = MP(form.replace('@', '').split('#')[0], pSet[i].m);
+				if (form.search('aye') > 0) {
+					temp['form'] = MP(temp['form'], '-aye');
+				}
+				temp['uni'] = uni + alignArg + pSet[i].u;
+				paradigms.push(temp);
+			}
+			// this time with optional îş+pronominals 
+			for (let i = 0; i < pSet.length; i++) {
+				let charBeforeSuffix = form[form.search(/.-?-?@/)];
+				for (let j = 0; j < ish.length; j++) {
+					ishSuffix = ish[j].m;
+					if (j == '1') {
+						ishSuffix = MP(charBeforeSuffix, ish[j].m).substring(1);
+					}
+					for (let k = 0; k < pPronomial.length; k++) {
+						let clitic = { 'm': '', 'u': '' };
+						if (transitivity == '0') { k = 6; }
+						if (transitivity == '1' && k > 0) {
+							// prevent invalid co-occurrence of S and O
+							if (!(pPronomial[k].u.search('2') + pSet[i].u.search('2') > -1)
+								&& !(pPronomial[k].u.search('1') + pSet[i].u.search('1') > -1)) {
+								// Note: when pronominal and argument are adjucent, pronominal precedes argument (girt-man-ît), except
+								//        for 3S pronominal (girt-in-î, girtû-ye-tî)
+								if(k == 3 && form.search('@#')>0){
+									let c = ish[j].m + MP(pSet[i].m, pPronomial[k].m);
+									if (charBeforeSuffix.search('[aeêiîouû]$') > -1 && c.search('^[aeêiîouû]')) {
+										c = c.replace(/^-i(m|t|n)/,'-$1').replace(/^-î/,'-y');
+									}
+									clitic['m'] = c;
+								}else{
+									clitic['m'] = MP(charBeforeSuffix + ishSuffix, pPronomial[k].m).substring(1); // apply morphophonology
+								}								
+								clitic['u'] = ish[j].u + ';' + alignPron + pPronomial[k].u;
+							}
+						}else{
+							clitic['m'] = ishSuffix;
+							clitic['u'] = ish[j].u;
+						}
+						if (clitic.m) {
+							let temp = {};
+							if(k == 3 && form.search('@#')>0){
+								temp['form'] = form.replace(/-?@/, clitic.m).split('#')[0];
+							}else{
+								console.log(ish[j].m + '|' + form + '|' + clitic.m);
+								temp['form'] = MP(form.replace(/-?@/, clitic.m).split('#')[0], pSet[i].m);
+							}
+							// subjuntive /-aye/ occurs after the argument 
+							if (form.search('aye') > 0) {
+								temp['form'] = MP(temp['form'], '-aye');
+							}
+							temp['uni'] = uni + alignArg + pSet[i].u + clitic.u; // adding to the annotation
+							paradigms.push(temp);
+						}
+					}
+				}
+			}
+			return paradigms;
+		}
+
+		function AppendPostVerb(form, uni) {
+			let paradigms = [];
+			let postPosition = '-e';
+			if (uni.search('PRS;PRF;IND') > 0) { // present perfect indicative
+				postPosition = (form.search(/e$/) > 0) ? '-te' : '-ete';  // kewt-û-m-ete, xist-û-m-e-(e)te
+			}
+			else if (form.search(/([aeêiîo])$/) > 0) {				
+				if (uni.search('IMP') > 0) {
+					postPosition = '-re'; // bi-kew-e-re
+				}
+				else if (uni.search('IPFV;SBJV') > 0 || uni.search('PST;PRF;SBJV') > 0) {
+					postPosition = '-te'; // bi-kewt-im-aye-te, kewt-ibû-m-aye-te
+				}				
+				else {
+					postPosition = '-ye';// xira-ye
+				}
+			}
+			let ewe = postPosition + 'we';
+			paradigms.push({ 'form': MP(form, ewe), 'uni': uni + ';[EWE]' });
+			paradigms.push({ 'form': MP(form, postPosition), 'uni': uni + ';[E]' });
+			return paradigms;
+		}
+
+		// Morpho-phonological changes
+		function MP(x, y) {
+			w = x + y;
+			switch (y) {
+				case '-ete':
+				case '-etewe':
+					w = w.replace(/(-yet-î)-ete(we)?$/, '$1-ye$2'); // girt-û-yet-î-yewe
+					w = w.replace(/î-(ete|etewe)$/, 'y-$1'); // girt-û-n-y-etewe
+					break;
+				case '-î':
+					w = w.replace(/-e-î$/, '-yet-î'); // girt-û-yet-î
+					w = w.replace(/([aeêiîouû])-î$/, '$1-y'); // nasî-y
+					break;
+				case '-îş':
+					w = w.replace(/([aeêiîouû])-îş$/, '$1-ş'); // nasî-ş-im
+					break;
+				case '-ewe':
+				case '-e':
+					w = w.replace(/û-(e|ewe)$/, 'uw-$1'); // de-y-fermuw-ewe
+					w = w.replace(/([aeêiîo])-(e|ewe)$/, '$1-y$2'); // nasî-yewe
+					break;
+				case '-aye':
+					w = w.replace(/a-aye$/, 'a-ye'); // bi-xira-ye
+					w = w.replace(/û-aye$/, 'uw-aye'); // bi-çuw-aye
+					w = w.replace(/î-aye$/, 'y-aye'); // bi-nasy-aye
+					break;
+				case '-ib':
+				case '-ibû':
+				case '-ibêt':
+					w = w.replace(/([aeêiîouû])-ib/, '$1-b'); // nasî-bêt
+					break;
+				case '-im':
+				case '-in':
+				case '-it':
+					w = w.replace(/([aeêiîouû])-i(m|n|t)$/, '$1-$2');  // nasî-m
+					break;
+				case '-ît':
+					w = w.replace(/([aeêiîouû])-ît$/, '$1-yt'); // xira-yt
+					break;
+				case '-êt':
+					w = w.replace(/e-êt$/, '-at'); // dekat
+					w = w.replace(/o-êt$/, 'w-at'); // dexwat
+					w = w.replace(/ê-êt$/, '-êt'); // deɫêt
+					w = w.replace(/û-êt$/, 'w-êt'); // denwêt
+					w = w.replace(/î-êt$/, 'y-êt'); // dejyêt
+					break;
+				case '-în':
+					w = w.replace(/([aeêiîouû])-în$/, '$1-yn');  // xira-yn
+					break;
+				case '-ȅ': // imperative
+					w = w.replace(/ç-ȅ$/, 'ç-o'); // bi-ç-o
+					w = w.replace(/([aeêiîouû])-ȅ$/, '$1'); // bi-xe
+					w = w.replace(/ȅ$/, 'e');
+					break;
+				case '-û': // PP
+					w = w.replace(/([aeêiîou])-û$/, '$1-w');  // gîra-w-im
+					w = w.replace(/û-û$/, 'u-w'); // çu-w-im
+					break;
+				default:
+					break;
+			}
+			return w;
+		}
+		$('#transitivity').on('change', () =>{			
+			if ($('#transitivity').val() == '1') {
+				$('#pastStem').val('girt');
+				$('#presentStem').val('gir');
+			}else{
+				$('#pastStem').val('kewt');
+				$('#presentStem').val('kew');
+			}
+		});
+
+		$('#btnClear').click(function () {
+			$('#resultsUnimorph').html('');
+			$('#resultsAll').hide('');
+			$('#btnClear').hide();
+		});
+		$(document).ready(function () {
+			$('#btnClear').hide();
+		});
+	</script>
+</body>
+
+</html>
