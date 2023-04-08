@@ -41,6 +41,10 @@
 						<div id="result"></div>
 						<div id="resultAr"></div>
 						<div>
+							<div id="optScript">
+								<input type="checkbox" id="inArabScript" name="inArabScript" value="1" checked>
+								<label for="inArabScript">Output in Arabic script</label>
+							</div>
 							<button class="button" id="btnGenerateAll">Generate All</button>
 						</div>
 					</div>
@@ -120,10 +124,11 @@
 						</div>
 					</div>
 				</div>
-				<div id="resultsAll">
+				<div id="outputAll">
 					<button class="button" id="btnClear">Clear</button>
-					<div id="resultsCount"></div>
-					<table id="resultsUnimorph"></table>
+					<button class="button" id="btnCopy">Copy</button>
+					<div id="outputCount"></div>
+					<div id="output"></div>
 				</div>
 			</div>
 		</div>
@@ -238,12 +243,16 @@
 					results.push(obj);
 				}
 			});
-
-			$('#resultsCount').html('Count: <b>' + results.length + '</b> Words');
-			$('#resultsUnimorph').html('<tr><th>Lemma</th><th>Form</th><th>Analysis</th></tr>');
-			results.forEach(x => $('#resultsUnimorph').append(`<tr><td>${transilterateLa2Ar($('#inputStem').val())}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
-			$('#resultsAll').show();
+			var inArabScript = $('#inArabScript').is(':checked')
+			var lemma = $('#inputStem').val().replace(/-/g, '');
+			if(inArabScript){
+				lemma = transilterateLa2Ar(lemma);}
+			$('#outputCount').html('Count: <b>' + results.length + '</b> Words');
+			$('#output').html('<table><tr><th>Lemma</th><th>Form</th><th>Analysis</th></tr><tbody id="inflection"></tbody></table>');
+			results.forEach(x => $('#inflection').append(`<tr><td>${lemma}</td><td>${(inArabScript) ? (transilterateLa2Ar(x.form.replace(/-/g, ''))) : (x.form) }</td><td>${x.uni}</td></tr>`));
+			$('#outputAll').show();
 			$('#btnClear').show();
+			$('#btnCopy').show();
 		}
 		
 		// Morpho-phonological changes
@@ -386,12 +395,23 @@
 		}
 
 		$('#btnClear').click(function () {
-			$('#resultsUnimorph').html('');
-			$('#resultsAll').hide('');
+			$('#output').html('');
+			$('#outputAll').hide();
 			$('#btnClear').hide();
+			$('#btnCopy').hide();
+		});
+		$('#btnCopy').click(function () {
+			var range = document.createRange();
+			range.selectNodeContents(document.getElementById('inflection'));
+			var sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+			document.execCommand('copy');
 		});
 		$(document).ready(function () {
 			$('#btnClear').hide();
+			$('#btnCopy').hide();
+			$('#outputAll').hide('');
 			generate();
 		});
 	</script>

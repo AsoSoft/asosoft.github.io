@@ -49,14 +49,19 @@
 							<label>Present Stem:</label>
 							<input type="text" id="presentStem" name="presentStem" spellcheck="false" value="kew">
 						</div>
+						<div id="optScript">
+							<input type="checkbox" id="inArabScript" name="inArabScript" value="1" checked>
+							<label for="inArabScript">Output in Arabic script</label>
+						</div>
 						<div>
 							<button class="button" id="btnGenerateAll">Generate All</button>
 						</div>
 					</div>
 				</div>
-				<div id="resultsAll">
+				<div id="outputAll">
 					<button class="button" id="btnClear">Clear</button>
-					<div id="results"></div>
+					<button class="button" id="btnCopy">Copy</button>
+					<div id="output"></div>
 				</div>
 			</div>
 		</div>
@@ -131,7 +136,7 @@
 			derivation.push({ 'form': PP, 'uni': 'V.PTCP' });
 			derivation.push({ 'form': 'ne-' + PP, 'uni': 'V.PTCP;NEG' });
 
-			// inflection (@ = is, # = argument)
+			// inflection (@ = is, # = pronomial)
 			let inflection = []
 			// from present stem
 			let alignment = (transitivity == '1') ? 'presentTransitive' : 'presentIntransitive';
@@ -174,31 +179,35 @@
 					results.push(x);
 				}
 			});
-			const lemma = transilterateLa2Ar(masdar.replace(/-/g, ''));
-			$('#results').html('Derivations: <b>' + derivation.length + '</b> forms');
-			$('#results').append('<table id="derivations"><tr><th>Lemma</th><th>Form(Latin)</th><th>Form</th><th>Analysis (UniMorph)</th></tr></table>');
-			derivation.forEach(x => $('#derivations').append(`<tr><td>${lemma}</td><td>${(x.form)}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
-			$('#results').append('<br/>Inflections: <b>' + results.length + '</b> forms');
-			$('#results').append('<table id="inflection"><tr><th>Lemma</th><th>Form(Latin)</th><th>Form</th><th>Analysis (UniMorph)</th></tr></table>');
-			results.forEach(x => $('#inflection').append(`<tr><td>${lemma}</td><td>${(x.form)}</td><td>${transilterateLa2Ar(x.form.replace(/-/g, ''))}</td><td>${x.uni}</td></tr>`));
-			$('#resultsAll').show();
+			var inArabScript = $('#inArabScript').is(':checked')
+			var lemma = masdar.replace(/-/g, '');
+			if(inArabScript){
+				lemma = transilterateLa2Ar(lemma);}
+			$('#output').html('Derivations: <b>' + derivation.length + '</b> forms');
+			$('#output').append('<table id="derivations"><tr><th>Lemma</th><th>Form</th><th>Analysis (UniMorph)</th></tr></table>');
+			derivation.forEach(x => $('#derivations').append(`<tr><td>${lemma}</td><td>${(inArabScript) ? transilterateLa2Ar(x.form.replace(/-/g, '')) : (x.form)}</td><td>${x.uni}</td></tr>`));
+			$('#output').append('<br/>Inflections: <b>' + results.length + '</b> forms');
+			$('#output').append('<table><tr><th>Lemma</th><th>Form</th><th>Analysis (UniMorph)</th></tr><tbody id="inflection"></tbody></table>');
+			results.forEach(x => $('#inflection').append(`<tr><td>${lemma}</td><td>${(inArabScript) ? transilterateLa2Ar(x.form.replace(/-/g, '')) : (x.form)}</td><td>${x.uni}</td></tr>`));
+			$('#outputAll').show();
 			$('#btnClear').show();
+			$('#btnCopy').show();
 		}
 
 		function Conjugate(form, uni, pSet, alignment) {
-			// two sets of pronouns occur with verbs: Arguments and Pronominals
+			// two sets of pronouns occur with verbs: AgreementMarks and pronomials
 			// due to the special form of ergtivity in Central Kurdish:
 			// in transitive, pronomials are: O in present tenses and S in past tenses
-			// Arguments in intransitives: S (ArgNO)
-			// Arguments in present transitives: A (ArgNO)
-			// Pronominals in present transitives: O (ArgAC)
-			// Arguments in past transitives: O (ArgAB) 
-			// Pronominals in past transitives: A (ArgER)
+			// AgreementMarks in intransitives: S (ArgNO)
+			// AgreementMarks in present transitives: A (ArgNO)
+			// pronomials in present transitives: O (ArgAC)
+			// AgreementMarks in past transitives: O (ArgAB) 
+			// pronomials in past transitives: A (ArgER)
 			const alignArg = (alignment == 'pastTransitive') ? 'ArgAB' : 'ArgNO';
 			const alignPron = (alignment == 'pastTransitive') ? 'ArgER' : 'ArgAC';
 
 			let paradigms = [];
-			// conjugate argument with 6 person/numbers
+			// conjugate agreement marker with 6 person/numbers
 			for (let i = 0; i < pSet.length; i++) {
 				let temp = {};
 				temp['form'] = MP(form.replace('@', '').split('#')[0], pSet[i].m);
@@ -208,7 +217,7 @@
 				temp['uni'] = uni + alignArg + pSet[i].u;
 				paradigms.push(temp);
 			}
-			// this time with optional îş+pronominals 
+			// this time with optional îş+pronomials 
 			for (let i = 0; i < pSet.length; i++) {
 				let charBeforeSuffix = form[form.search(/.-?-?@/)];
 				for (let j = 0; j < ish.length; j++) {
@@ -223,8 +232,8 @@
 							// prevent invalid co-occurrence of S and O
 							if (!(pPronomial[k].u.search('2') + pSet[i].u.search('2') > -1)
 								&& !(pPronomial[k].u.search('1') + pSet[i].u.search('1') > -1)) {
-								// Note: when pronominal and argument are adjucent, pronominal precedes argument (girt-man-ît), except
-								//        for 3S pronominal (girt-in-î, girtû-ye-tî)
+								// Note: when agent and patient are adjacent, agent precedes patient (girt-man-ît=we took you)
+								//        EXCEPT: for 3S agent (girt-in-î = he took them, girtû-ye-tî = he took it)
 								if(k == 3 && form.search('@#')>0){
 									let c = ish[j].m + MP(pSet[i].m, pPronomial[k].m);
 									if (charBeforeSuffix.search('[aeêiîouû]$') > -1 && c.search('^[aeêiîouû]')) {
@@ -248,7 +257,7 @@
 								console.log(ish[j].m + '|' + form + '|' + clitic.m);
 								temp['form'] = MP(form.replace(/-?@/, clitic.m).split('#')[0], pSet[i].m);
 							}
-							// subjuntive /-aye/ occurs after the argument 
+							// subjuntive /-aye/ occurs after the agreement marker 
 							if (form.search('aye') > 0) {
 								temp['form'] = MP(temp['form'], '-aye');
 							}
@@ -358,12 +367,22 @@
 		});
 
 		$('#btnClear').click(function () {
-			$('#resultsUnimorph').html('');
-			$('#resultsAll').hide('');
+			$('#outputUnimorph').html('');
+			$('#outputAll').hide('');
 			$('#btnClear').hide();
+			$('#btnCopy').hide();
+		});
+		$('#btnCopy').click(function () {
+			var range = document.createRange();
+			range.selectNodeContents(document.getElementById('inflection'));
+			var sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+			document.execCommand('copy');
 		});
 		$(document).ready(function () {
 			$('#btnClear').hide();
+			$('#btnCopy').hide();
 		});
 	</script>
 </body>
