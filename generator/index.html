@@ -29,7 +29,7 @@
 			<h1>Kurdish Word Generator</h1>
 			<div class="nContainer">
 				<div class="menu">
-					<div class="item active">Nouns</div>
+					<div class="item active">Nouns/Adjectives</div>
 					<a class="item" href="verb.html">Verbs</a>
 				</div>
 				<div class="tab cols">
@@ -49,7 +49,22 @@
 						</div>
 					</div>
 					<div class="options">
+						<div id="optPOS">
+							<label>Part of speech: </label>
+							<select name="pos" id="pos">
+								<option value="N" selected>noun</option>
+								<option value="ADJ">adjective</option>
+							</select>
+						</div>
 						<div><b>Features and Clitics:</b></div>
+						<div id="optComp">
+							<label>Comparison: </label>
+							<select name="comparison" id="comparison">
+								<option value="0" selected>not compared</option>
+								<option value="1">Comparative</option>
+								<option value="2">Superlative</option>
+							</select>
+						</div>
 						<div id="optNum">
 							<label>Number: </label>
 							<select name="number" id="number">
@@ -145,6 +160,8 @@
 	</main>
 	<script src="../js/L2A.js"></script>
 	<script>
+		let arrComp = ['', '-tir', '-tirîn'];
+		let arrCompU = ['', 'CMPR', 'SPRL'];
 		let arrDef = ['', '-eke', '-êk', '-ė', '-an', '-ekan', '-anêk', '-ane'];
 		let arrDefU = ['', 'DEF', 'INDF', '[DEM]', 'PL', 'DEF;PL', 'PL;INDF', 'PL;[DEM]'];
 		let arrCop = ['', '-im', '-ît', '-ĕ', '-în', '-in', '-in'];
@@ -171,6 +188,9 @@
 			updateItems();
 			let w = $('#inputStem').val();
 			if(w){
+				if ($('#comparison').is(":visible"))
+					w = MP(w, arrComp[$('#comparison').find(":selected").val()]);
+
 				if ($('#izafeE').is(":visible") && $('#izafeE').is(':checked'))
 					w = MP(w, arrIzafeE[1]);
 
@@ -224,7 +244,10 @@
 		}
 		$('#btnGenerateAll').click(function () { if ($('#inputStem').val()) generateAllNoun() });
 		function generateAllNoun() {
-			let ww = [{'form':$('#inputStem').val() ,  'uni': 'N'}]
+			const POS = $('#pos').val();
+			let ww = [{'form': $('#inputStem').val() ,  'uni': POS}]
+			if(POS == 'ADJ')
+				ww = combineUniMorph(ww, arrComp, arrCompU);
 			ww1 = combineUniMorph(ww, arrDef, arrDefU);
 			ww2 = combineUniMorph(ww1, arrIsh, arrIshU);
 			ww3 = combineUniMorph(ww2, arrArgPoss, arrPossU); // possesive: kar-eke-man baş-e
@@ -318,14 +341,16 @@
 		}
 
 		$('#izafeE').on('change', () => generate());
-		$('#ish').on('change', () => generate());
 		$('#izafe').on('change', () => generate());
+		$('#ish').on('change', () => generate());
 		$('#argument').on('change', () => generate());
 		$('#preposition').on('change', () => generate());
 		$('#copula').on('change', () => generate());
 		$('#possesive').on('change', () => generate());
 		$('#number').on('change', () => generate());
 		$('#definition').on('change', () => generate());
+		$('#comparison').on('change', () => generate());
+		$('#pos').on('change', () => generate());
 
 		function updateItems() {
 			$('#optIzafeE').show();
@@ -337,6 +362,7 @@
 			$('#optPoss').show();
 			$('#optDef').show();
 			$('#optNum').show();
+			$('#optComp').show();
 
 			if ($('#ish').is(':checked')) {
 				$('#optIzafe').hide();
@@ -391,6 +417,10 @@
 				$('#optIzafeE').hide();
 				$('#optIzafe').hide();
 				$('#optPrep').hide();
+			}
+
+			if ($('#pos').val() != 'ADJ') {
+				$('#optComp').hide();
 			}
 		}
 

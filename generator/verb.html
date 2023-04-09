@@ -29,7 +29,7 @@
 			<h1>Kurdish Word Generator</h1>
 			<div class="nContainer">
 				<div class="menu">
-					<a class="item" href="index.html">Nouns</a>
+					<a class="item" href="index.html">Nouns/Adjectives</a>
 					<div class="item active">Verbs</div>
 				</div>
 				<div class="tab">
@@ -48,6 +48,10 @@
 						<div>
 							<label>Present Stem:</label>
 							<input type="text" id="presentStem" name="presentStem" spellcheck="false" value="kew">
+						</div>
+						<div id="optE">
+							<input type="checkbox" id="postE" name="postE" value="1" checked>
+							<label for="postE">Postposition /-e/</label>
 						</div>
 						<div id="optScript">
 							<input type="checkbox" id="inArabScript" name="inArabScript" value="1" checked>
@@ -289,7 +293,8 @@
 			}
 			let ewe = postPosition + 'we';
 			paradigms.push({ 'form': MP(form, ewe), 'uni': uni + ';[EWE]' });
-			paradigms.push({ 'form': MP(form, postPosition), 'uni': uni + ';[E]' });
+			if($('#postE').is(':checked'))
+				paradigms.push({ 'form': MP(form, postPosition), 'uni': uni + ';[E]' });
 			return paradigms;
 		}
 
