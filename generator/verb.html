@@ -121,7 +121,7 @@
 		];
 		const ish = [
 			{ 'm': '', 'u': '' },
-			{ 'm': '-îş', 'u': ';[ÎŞ]' }
+			{ 'm': '-îş', 'u': ';[ISH]' }
 		];
 
 		let transitivity = 0;
@@ -218,7 +218,12 @@
 				if (form.search('aye') > 0) {
 					temp['form'] = MP(temp['form'], '-aye');
 				}
-				temp['uni'] = uni + alignArg + pSet[i].u;
+				
+				if(alignment == 'pastTransitive'){
+					temp['uni'] = uni + 'PM' + pSet[i].u;
+				}else{
+					temp['uni'] = uni + alignArg + pSet[i].u;
+				}
 				paradigms.push(temp);
 			}
 			// this time with optional îş+pronomials 
@@ -253,6 +258,7 @@
 							clitic['m'] = ishSuffix;
 							clitic['u'] = ish[j].u;
 						}
+						
 						if (clitic.m) {
 							let temp = {};
 							if(k == 3 && form.search('@#')>0){
@@ -292,7 +298,7 @@
 				}
 			}
 			let ewe = postPosition + 'we';
-			paradigms.push({ 'form': MP(form, ewe), 'uni': uni + ';[EWE]' });
+			paradigms.push({ 'form': MP(form, ewe), 'uni': uni + ';[EWE1]' });
 			if($('#postE').is(':checked'))
 				paradigms.push({ 'form': MP(form, postPosition), 'uni': uni + ';[E]' });
 			return paradigms;
