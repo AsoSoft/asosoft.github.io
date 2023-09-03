@@ -45,6 +45,7 @@
 							<div class="item" id="mItem1">Syllabified Phonemes</div>
 							<div class="item" id="mItem2">IPA</div>
 							<div class="item" id="mItem3">Hawar</div>
+							<div class="item" id="mItem4">Phonemes</div>
 						</div>
 						<div id="tab1" class="tab">
 							<div class="">
@@ -64,6 +65,9 @@
 						</div>
 						<div id="tab3" class="tab">
 							<div id="textOut3" contenteditable="true" class="resultDiv" spellcheck="false"></div>
+						</div>
+						<div id="tab4" class="tab">
+							<div id="textOut4" contenteditable="true" class="resultDiv" spellcheck="false"></div>
 						</div>
 					</div>
 				</div>
@@ -151,6 +155,9 @@
 		$('#mItem3').click(function() {
 			changeTab(3)
 		});
+		$('#mItem4').click(function() {
+			changeTab(4)
+		});
 		$('#btnClear').click(function() {
 			$('#txtInput').val('');
 			$('#results').hide();
@@ -175,6 +182,7 @@
 						$('#textOut1').html(showPH(data['ph']));
 						$('#textOut2').html(showPH(data['ipa']));
 						$('#textOut3').html(showPH(data['hawar']));
+						$('#textOut4').html(simplePhonems(showPH(data['ph'])));
 						$('.ambig').each(function() {
 							$(this).click(function() {
 								suggest($(this))
@@ -191,6 +199,16 @@
 			return text.replace(
 				new RegExp('([' + w + ']+)¶([' + w + '¶]+)', 'g'),
 				'<span class=\"ambig\" data-n=\"$2\">$1</span>');
+		}
+		function simplePhonems(text){
+			text = text.replace(/ˈ/g, '');
+			text = text.replace(/ł/g, 'ḻ');
+			text = text.replace(/ř/g, 'ṟ');
+			text = text.replace(/ħ/g, 'ẖ');
+			text = text.replace(/ẍ/g, 'x̱');
+			text = text.replace(/ƹ/g, '‛');
+			text = text.replace(/ʔ/g, '');
+			return text;
 		}
 
 		function suggest(grapheme) {
